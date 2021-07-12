@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CinéCondé - Le Royal
+{% endblock %}
+
+{% block body %}
+	<div class='undernav'>
+		<h1>Films à l'affiche</h1>
+		{% include "dayfilter.html.twig" %}
+	</div>
+
+	<section class="prog">
+		{% for schedule in schedule_just_aftertoday %}
+			<article>
+				<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
+					<img src="{{schedule.seance.film.affichette}}" class="affiche">
+				</a>
+				<h2>{{schedule.seance.film.titre}}</h2>
+				<ul>
+					<li>
+						{{schedule.seance.film.realisateurs}}
+					</li>
+					<li>Prochaine séance le
+						{{schedule.horaire|date('d/m/Y')}}</li>
+
+				</ul>
+
+
+			</article>
+		{% endfor %}
+	</section>
+
+
+{% endblock %}

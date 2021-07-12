@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CinéCondé - Le Royal
+{% endblock %}
+
+{% block body %}
+	<div class='undernav'>
+		<input type="button" class="btn" value="Retour!" onclick="history.back()">
+		<h1>{{app.request.get('jour')|format_datetime('full', 'none', locale='fr')}}</h1>
+		{% include "dayfilter.html.twig" %}
+	</div>
+	<section class="jour">
+		{% if (event == null) and (schedule == null) %}
+			<article>
+				<p>Il n'y a pas de sécance ce jour là...</p>
+			</article>
+		{% endif %}
+		{% if event != null %}
+			<div class="daysection">
+				<h2>Evènement(s)</h2>
+				<div>
+					{% for event in event %}
+						<article>
+							<a href="{{path('evdetail', {'id':event.id})}}">
+								<img src="{{event.visuel}}" class="affiche">
+							</a>
+							<h2>{{event.titre}}</h2>
+							<ul>
+								{% if event.date|date("Hi") != "0000" %}
+									<li>
+										à
+										{{event.date|format_datetime('none', 'short', locale='fr')}}
+									</li>
+								{% endif %}
+							</ul>
+						</article>
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+
+		{% if schedule != null %}
+			<div class="daysection">
+				<h2>Film(s)</h2>
+				<div>
+					{% for schedule in schedule %}
+						<article>
+							<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
+								<img src="{{schedule.seance.film.affichette}}" class="affiche">
+							</a>
+							<h2>{{schedule.seance.film.titre}}</h2>
+							<ul>
+								<li>
+									{{schedule.seance.film.realisateurs}}
+								</li>
+								<li>Séance à
+									<strong>{{schedule.horaire|date('H:i')}}</strong>
+								</li>
+							</ul>
+						</article>
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+	</section>
+{% endblock %}

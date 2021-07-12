@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+	<div class='undernav'>
+		<h1>Evènement(s)</h1>
+		{% if is_granted('ROLE_USER') %}
+			<a href="{{path('event_create')}}">Créer un nouvel évènement</a>
+		{% endif %}
+		{% include "dayfilter.html.twig" %}
+	</div>
+
+	<section class="prog">
+		{% if event is empty %}
+			<article>
+				Il n'y à plus d'évènement planifié pour le moment.
+			</article>
+		{% endif %}
+		{% for event in event %}
+			<article>
+				<a href="{{path('evdetail', {'id':event.id})}}">
+					<img src="{{event.visuel}}" class="affiche">
+				</a>
+				<h2>{{event.titre}}</h2>
+				<ul>
+
+					<li>
+						{{event.date|date('d/m/Y')}}</li>
+
+				</ul>
+
+
+			</article>
+		{% endfor %}
+	</section>
+{% endblock %}

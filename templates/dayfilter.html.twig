@@ -1,0 +1,9 @@
+<form
+	class='dayfilter' action={{path('jour', { 'jour':app.request.query.get("jour") } )}} methode="get">
+
+	{# <label for="Dayfilter">Choisir une date :
+		</label> #}
+	<input type="date" id="jour" name="jour">
+	<input type="submit" class="btn" id="jourbtn" value="rechercher les séances" name="envoi">
+
+</form>

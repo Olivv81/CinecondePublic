@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<section class="prog">
+		<article>
+			<h2>Voulez vous vraiment supprimer cet évènement ?</h2>
+			<h3>{{event.titre}}</h3>
+			<img src="{{event.visuel}}" class="affiche">
+			<button class="btn" onclick="window.location.href = '{{path('event-remove', {'id':event.id} )}}';">Oui je confirme !</button>
+
+		</article>
+
+	</section>
+
+{% endblock %}

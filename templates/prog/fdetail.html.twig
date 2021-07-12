@@ -1,0 +1,84 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<div class='undernav'>
+		<input type="button" class="btn" value="Retour!" onclick="history.back()">
+		<h1>Détail du film</h1>
+		{% include "dayfilter.html.twig" %}
+	</div>
+	<article class="detail">
+
+		<img src="{{film.affichette}}" class="affiche">
+
+		<div class="description">
+			<h2>{{film.titre}}</h2>
+			<ul>
+				<li>de
+					{{film.realisateurs}}</li>
+				<li>{{film.nationalite}}
+					-
+					{{film.anneeproduction | date('Y')}}
+					-
+					{{film.duree|date('H\\hi')}}</li>
+				{% if film.acteurs %}
+					<li>avec
+						{{film.acteurs}}</li>
+				{% endif %}
+				{% if film.genreprincipal %}
+					<li>Genre :
+						{{film.genreprincipal}}</li>
+				{% endif %}
+			</ul>
+
+			{% if film.classification %}
+				<div class='classification'>{{film.classification}}
+				</div>
+
+			{% endif %}
+
+
+			<h3>Synopsis :</h3>
+			<p>
+				{{film.synopsis}}
+			</p>
+		</div>
+
+		<div class="seance">
+			<h3>Séances :</h3>
+			<ul>
+				{% if movie_schedule is empty %}
+					<p>Il n'y a pas de séance programmée pour ce film ...</p>
+				{% else %}
+					{% for horaires in movie_schedule %}
+						<li>
+							{{horaires.horaire|format_datetime('full', 'short', locale='fr')}}
+							{% if horaires.seance.projection == "3D" %}
+								- Projection en 3D
+							{% endif %}
+							{% if horaires.seance.vo == 1 %}
+								- en version original
+							{% endif %}
+						</li>
+					{% endfor %}
+				{% endif %}
+
+			</ul>
+		</div>
+
+		<div
+			class="ba">
+
+			{# <embed src="https://player.allocine.fr/{{film.video}}.html?partner=ccg&autoplay=1" type="" controls id="myvideo" allowfullscreen="true"> #}
+			<div class="video">
+				<iframe src="https://player.allocine.fr/{{film.video}}.html?partner=ccg&amp;autoplay=1" id="myvideo" allowfullscreen="true"></iframe>
+			</div>
+		</div>
+	</article>
+
+	<script>
+		var elem = document.getElementById("myvideo");
+if (elem.requestFullscreen) {
+elem.requestFullscreen();
+}
+	</script>
+
+{% endblock %}

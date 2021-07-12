@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class='undernav'>
+		<h1>Contactez nous :</h1>
+
+	</div>
+	<div class="submitform">
+
+		{{ form_start(our_form) }}
+		{{ form_row(our_form.nom, {'label': 'Prénom :','attr': {'class': 'form-control'}}) }}
+		{{ form_row(our_form.email, {'label': 'Email :','attr': {'class': 'form-control'}}) }}
+		{{ form_row(our_form.message, {'label': 'Votre message :','attr': {'class': 'form-control'}}) }}
+		<input type="submit" value="Envoyer !" class="btn btn-primary py-3 px-5">
+		{{ form_end(our_form) }}
+
+
+	</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<div class='undernav'>
+		<input type="button" class="btn" value="Retour!" onclick="history.back()">
+
+		<h1>Détail de l'évènement</h1>
+		{% if is_granted('ROLE_USER') %}
+			<a href="{{path('event-edit', {'id':event.id} )}}">Modifier</a>
+			<a href="{{path("event-remove-confrim", {'id':event.id} )}}">Supprimer</a>
+		{% endif %}
+		{% include "dayfilter.html.twig" %}
+	</div>
+
+	<article class="detail">
+
+		<img src="{{event.visuel}}" class="affiche">
+
+		<div class="description">
+
+			<h2>{{event.titre}}</h2>
+			<p>{{event.date|format_datetime('full', 'none', locale='fr')}}
+				{% if event.date|date("Hi") != "0000" %}
+					à
+					{{event.date|format_datetime('none', 'short', locale='fr')}}
+				{% endif %}
+				{% if event.dateFin != null %}
+					au
+					{{event.dateFin|format_datetime('full', 'none', locale='fr')}}
+				{% endif %}
+
+			</p>
+
+
+			<h3>Description :</h3>
+			<p>
+				{{event.description}}
+			</p>
+			<ul>
+				<li>Tarif(s) :
+					{{event.tarifs}}
+				</li>
+			</ul>
+			{% if movies is not empty %}
+				<h3>Film(s):</h3>
+				<ul class="filmseven">
+
+					{% for movie in movies %}
+						<li>
+							<a href="{{path('fdetail', {'id':movie.id})}}">
+								<img src="{{movie.affichette}}" alt="" class='affiche'>
+							</a>
+						</li>
+
+
+					{% endfor %}
+				{% endif %}
+			</ul>
+		</div>
+	</article>
+{% endblock %}

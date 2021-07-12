@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta charset="UTF-8">
+		<meta name="keywords" content="cinéma, condé sur noireau, condé en normandie, sortir, sortie, film">
+		<meta name="description" content="Présentation de l'association et de la programmation du cinéma\" le royal\"">
+		<meta name="author" content="Olivier CAILLAUD GAFSI">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" type="image/png" href="{{ absolute_url(asset('images/favicon.png')) }}"/>
+		<title>
+			{% block title %}
+				CinéCondé - Le Royal
+			{% endblock %}
+		</title>
+		{# <link rel="stylesheet" href="..\styles\styles.css"> #}
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+		{% block javascripts %}
+			{#{{ encore_entry_script_tags('app') }} #}
+		{% endblock %}
+	</head>
+	<header>
+
+		<img src="{{ absolute_url(asset('images/logocinecondeblanc.png')) }}" alt="Symfony!" class="logo"/>
+		<h1>
+			le royal
+		</h1>
+		<div class="descriptiontitre">
+			Cinéma associatif de Condé en Normandie
+		</div>
+	</header>
+	<nav class="topnav" id="myTopnav">
+		<a href="javascript:void(0);" class="icon" onclick="myFunction()">
+			<a href="{{path('prog')}}" class="{% if active_tab == 'index' %} active{% endif %}">A l'affiche</a>
+			<a href="{{path('event')}}" class="{% if active_tab == 'event' %} active{% endif %}">Les évènements</a>
+			<a href="{{path('tarifs')}}" class="{% if active_tab == 'tarifs' %} active{% endif %}">Tarifs</a>
+			<a href="{{path('contact')}}" class="{% if active_tab == 'contact' %} active{% endif %}">Contact</a>
+			{# {% if not app.user %}
+			<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
+			{% else %}
+			<a href="{{path('security_logout')}}" class="">deconnexion</a>
+			{% endif %} #}
+		</a>
+
+	</nav>
+
+
+	<script>
+		function myFunction() {
+var x = document.getElementById("myTopnav");
+if (x.className === "topnav") {
+x.className += " responsive";
+} else {
+x.className = "topnav";
+}
+}
+	</script>
+
+
+	<body>
+		{% block body %}{% endblock %}
+
+
+	</body>
+	<footer>
+		<p>
+			<a href="{{path('download',{'file':"affichette"})}}">Télécharger l'affichette</a>
+			<a href="{{path('download',{'file':"programme"})}}">Téléchrager  notre programme</a>
+		</p>
+		<p>Suivez-nous :
+			<a href="https://www.facebook.com/cinecondesurnoireau">
+				<img src="{{ absolute_url(asset('images/iconefb.png')) }}" alt="Icone Facebook" class="logofb"/>
+			</a>
+		</p>
+		<p>
+			<a href="{{path('mentions-legales')}}">Mentions legales</a>
+		</p>
+		<p>
+			Image de fond par
+			<a href="https://pixabay.com/photos/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=918655">Free-Photos</a>
+			de
+			<a href="https://pixabay.com/fr/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=918655">Pixabay</a>
+		</p>
+
+	</footer>
+</html>

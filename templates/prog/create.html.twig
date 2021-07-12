@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{% form_theme formEvent _self %}
+
+
+{% block body %}
+
+
+	<div class='submitform'>
+		<h2>Création d'un événement</h2>
+
+		{{form_start(formEvent)}}
+		{{form_row(formEvent.titre,{'label': 'Titre :','attr':{'placeholder': "titre de l' évènement"}})}}
+		{{form_row(formEvent.description,{'label': 'Description :','attr':{'placeholder': "descritpion de l'évènement"}})}}
+		{{form_row(formEvent.tarifs,{'label': 'Tarif(s) :','attr':{'placeholder': "tarif(s)"}})}}
+		{{form_row(formEvent.date)}}
+		{{form_row(formEvent.dateFin)}}
+		{{form_row(formEvent.visuel,{'attr':{'placeholder': "url de l' image"}})}}
+		{{form_row(formEvent.films)}}
+		{# {{form_errors(formEvent.film)}}
+					{{form_widget(formEvent.film, {'attr':{'class': "chosen-select", 'multiple':""}})}} #}
+		{{form_row(formEvent.video)}}
+
+		<button type="submit" class="btn">
+			{% if editMode %}
+				Enregistrer !
+			{% else %}
+				Ajouter l'article
+			{% endif %}
+		</button>
+		{{form_end(formEvent)}}
+	</div>
+	>
+{% endblock %}
