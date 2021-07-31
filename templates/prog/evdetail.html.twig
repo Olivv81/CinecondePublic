@@ -50,11 +50,14 @@
 								<img src="{{movie.affichette}}" alt="" class='affiche'>
 							</a>
 						</li>
-
-
 					{% endfor %}
 				{% endif %}
+
+
 			</ul>
+			{% if event.video %}
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/{{event.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{% endif %}
 		</div>
 	</article>
 {% endblock %}

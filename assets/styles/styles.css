@@ -24,7 +24,7 @@
 --color1: rgba(255, 255, 255, 0.9);
 --color2: rgb(58, 58, 58);
 --color3: rgb(187, 123, 95);
---color4: rgb(189, 172, 145);
+--color4: rgb(91, 122, 132);
 --color5: rgb(122, 108, 73);
 }
 
@@ -310,7 +310,7 @@ box-shadow: -4px -4px 6px 1px rgba(0,0,0,0.3);
   column-gap: 1vw;
   row-gap: 2rem;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-auto-rows: 1fr auto;
+  grid-auto-rows: 1fr 2fr;
   margin: 30px 4vw;
   background: none;
   padding: 0;
@@ -340,7 +340,10 @@ font-weight: bold;
 .description li{
   font-family: rubik;
   text-align: left;
- 
+}
+
+.description iframe{
+  margin: auto;
 }
 .seance {
   grid-column: 2;

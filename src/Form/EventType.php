@@ -37,6 +37,7 @@ class EventType extends AbstractType
                 // },
 
                 'choice_label' => 'titre',
+                'choice_value' => 'titre',
                 'multiple' => "true",
                 'required' => false,
 

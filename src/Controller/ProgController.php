@@ -35,8 +35,9 @@ class ProgController extends AbstractController
         $lesfilms = simplexml_load_file('../allocineseances.xml');
         $entityManager = $this->getDoctrine()->getManager();
         $repofilm = $this->getDoctrine()->getRepository(Film::class);
-        // $reposeance = $this->getDoctrine()->getRepository(Seance::class);
+        $reposeance = $this->getDoctrine()->getRepository(Seance::class);
         $repohoraire = $this->getDoctrine()->getRepository(Horaire::class);
+
 
         require_once(__DIR__ . '/Allocine.php');
 
@@ -99,7 +100,12 @@ class ProgController extends AbstractController
                 $projection = strval($seancexml['projection']);
                 $VO = strval($seancexml['vo']);
 
-                $seanceexistante = $this->getDoctrine()->getRepository(Seance::class)->IDfilmInSeance($projection, $VO, $IDfilm);
+                $seanceexistante = $this->getDoctrine()->getRepository(Seance::class)->findOneBy([
+                    'projection' => $projection,
+                    'vo' => $VO,
+                    'film' => $IDfilm
+                ]);
+
 
                 if (empty($seanceexistante)) {
                     $seance = new Seance();
@@ -123,6 +129,7 @@ class ProgController extends AbstractController
                         'horaire' => (date_create_from_format('d-m-Y H:i:s', $horairexml[$line]))
                     ]);
                     if (empty($horaireexistant)) {
+
                         $horaire = new Horaire();
                         $horaire
                             ->setHoraire(date_create_from_format('d-m-Y H:i:s', $horairexml[$line]))

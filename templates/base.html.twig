@@ -18,7 +18,7 @@
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
 		{% block javascripts %}
-			{#{{ encore_entry_script_tags('app') }} #}
+			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
 	<header>
@@ -38,10 +38,10 @@
 			<a href="{{path('tarifs')}}" class="{% if active_tab == 'tarifs' %} active{% endif %}">Tarifs</a>
 			<a href="{{path('contact')}}" class="{% if active_tab == 'contact' %} active{% endif %}">Contact</a>
 			{# {% if not app.user %}
-			<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
-			{% else %}
-			<a href="{{path('security_logout')}}" class="">deconnexion</a>
-			{% endif %} #}
+						<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
+						{% else %}
+						<a href="{{path('security_logout')}}" class="">deconnexion</a>
+						{% endif %} #}
 		</a>
 
 	</nav>
