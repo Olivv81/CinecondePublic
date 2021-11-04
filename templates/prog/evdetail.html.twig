@@ -13,11 +13,11 @@
 
 	<article class="detail">
 
-		<img src="{{event.visuel}}" class="affiche">
+		<img src="{{ absolute_url(asset('images/event/'~event.imagename)) }}" class="affiche" alt="visuel de l'évènement">
 
 		<div class="description">
 
-			<h2>{{event.titre}}</h2>
+			<h2>{{event.titre|nl2br}}</h2>
 			<p>{{event.date|format_datetime('full', 'none', locale='fr')}}
 				{% if event.date|date("Hi") != "0000" %}
 					à
@@ -33,7 +33,7 @@
 
 			<h3>Description :</h3>
 			<p>
-				{{event.description}}
+				{{event.description|nl2br}}
 			</p>
 			<ul>
 				<li>Tarif(s) :
@@ -55,9 +55,11 @@
 
 
 			</ul>
-			{% if event.video %}
-				<iframe width="560" height="315" src="https://www.youtube.com/embed/{{event.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-			{% endif %}
+
 		</div>
-	</article>
-{% endblock %}
+		{% if event.video %}
+			<div class="video">
+				<iframe src="https://www.youtube.com/embed/{{event.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{% endif %}
+		</article>
+	{% endblock %}

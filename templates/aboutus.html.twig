@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	<div class='undernav'>
+		<h1>L'association Ciné-Condé c'est :</h1>
+	</div>
+	<section class="aboutus">
+		<article>
+			<Div>
+				<p>Une cinquantaine de bénévoles et un salarié pour gérer l'activité du cinéma<strong>
+						"Le Royal"</strong>
+					de Condé en Normandie.</p>
+			</Div>
+			<img src="{{ absolute_url(asset('images/volunteer-g75685f0db_1920.png')) }}" alt="bénévoles">
+		</article>
+		<article>
+			<div>
+				<p>Une programmation riche et variée pour tous !</p>
+				<ul>
+					<li>Des films "grands publics"</li>
+					<li>Des sorties nationales</li>
+					<li>Des films "jeune public"</li>
+					<li>Des films "Art et Essai"</li>
+				</ul>
+
+			</div>
+
+			<img src="{{ absolute_url(asset('images/demonstration-gb6244a74c_640.jpg'))}}" alt="spéctateurs">
+		</article>
+		<article>
+			<div>
+				<p>Des animations et des actions culturelles :</p>
+				<ul>
+					<li>Soirées horreur</li>
+					<li>Rencontre avec des réalisateurs</li>
+					<li>Soirées débats</li>
+					<li>et bien d'autres !</li>
+				</ul>
+			</div>
+
+			<img src="{{ absolute_url(asset('images/microphone-1246057_640.jpg'))}}" alt="microphone">
+		</article>
+		<article>
+			<div>
+				<p>Et nous ne sommes pas seuls !</p>
+				<ul>
+					<li>Affiliation à la ligue de l'enseignement de Normandie</li>
+					<li>Partenaire de MACAO 7ème Art</li>
+				</ul>
+				<div class='partenaire'>
+					<a href="https://laliguenormandie.org/cinema/">
+						<img src="{{ absolute_url(asset('images/logo_ligue.svg'))}}" alt="logo ligue de normandie"></a>
+					<a href="http://www.macao7emeart.fr/macao/-Presentation-">
+						<img src="{{ absolute_url(asset('images/logo_macao_2018.png'))}}" alt="logo Macao"></a>
+
+				</div>
+
+
+			</div>
+
+		</article>
+	</section>
+{% endblock %}

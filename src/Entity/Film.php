@@ -127,6 +127,11 @@ class Film
      */
     private $classification;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $affichette250;
+
 
 
 
@@ -369,6 +374,18 @@ class Film
     public function setClassification(?string $classification): self
     {
         $this->classification = $classification;
+
+        return $this;
+    }
+
+    public function getAffichette250(): ?string
+    {
+        return $this->affichette250;
+    }
+
+    public function setAffichette250(?string $affichette250): self
+    {
+        $this->affichette250 = $affichette250;
 
         return $this;
     }

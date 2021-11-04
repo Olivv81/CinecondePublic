@@ -13,7 +13,7 @@
 		{% for schedule in schedule_just_aftertoday %}
 			<article>
 				<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
-					<img src="{{schedule.seance.film.affichette}}" class="affiche">
+					<img src="{{schedule.seance.film.affichette250}}" class="affiche" alt="affiche du film">
 				</a>
 				<h2>{{schedule.seance.film.titre}}</h2>
 				<ul>

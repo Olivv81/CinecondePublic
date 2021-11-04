@@ -18,7 +18,7 @@ class SecurityController extends AbstractController
      */
     public function registration(Request $request, UserPasswordEncoderInterface $encoder)
     {
-
+        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $manager = $this->getDoctrine()->getManager();
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);

@@ -18,8 +18,8 @@ class RegistrationType extends AbstractType
             ->add('password', PasswordType::class)
             ->add('email')
             ->add('prenom')
-            ->add('confirm_password', PasswordType::class)
-            ->add('roles');
+            ->add('confirm_password', PasswordType::class);
+        // ->add('roles');
     }
 
     public function configureOptions(OptionsResolver $resolver)

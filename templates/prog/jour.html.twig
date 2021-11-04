@@ -22,7 +22,7 @@
 					{% for event in event %}
 						<article>
 							<a href="{{path('evdetail', {'id':event.id})}}">
-								<img src="{{event.visuel}}" class="affiche">
+								<img src="{{ absolute_url(asset('images/event/'~event.imagename)) }}" class="affiche"/>
 							</a>
 							<h2>{{event.titre}}</h2>
 							<ul>

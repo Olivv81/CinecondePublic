@@ -14,7 +14,7 @@ class Allocine
     public function __construct()
     {
         $this->_partner_key = '100ED1DA33EB';
-        $this->_secret_key = '1a1ed8c1bed24d60ae3472eed1da33e';
+        $this->_secret_key = '1a1ed8c1bed24d60ae3472eed1da33eb';
     }
 
     private function _do_request($method, $params)

@@ -1,0 +1,8 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        evenement:
+            uri_prefix: /images/event
+            upload_destination: '%kernel.project_dir%/public/images/event'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer

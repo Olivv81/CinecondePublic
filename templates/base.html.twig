@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta charset="UTF-8">
-		<meta name="keywords" content="cinéma, condé sur noireau, condé en normandie, sortir, sortie, film">
-		<meta name="description" content="Présentation de l'association et de la programmation du cinéma\" le royal\"">
+		<meta name="keywords" content="cinéma, condé sur noireau, condé en normandie, le royal, sortir, sortie, film">
+		<meta name="description" content="Présentation de l'association et de la programmation du cinéma Le Royal">
 		<meta name="author" content="Olivier CAILLAUD GAFSI">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta property="og:image" content="{{ absolute_url(asset('images/logocineconde.png')) }}"/>
 		<link rel="shortcut icon" type="image/png" href="{{ absolute_url(asset('images/favicon.png')) }}"/>
+
 		<title>
 			{% block title %}
 				CinéCondé - Le Royal
@@ -23,7 +26,7 @@
 	</head>
 	<header>
 
-		<img src="{{ absolute_url(asset('images/logocinecondeblanc.png')) }}" alt="Symfony!" class="logo"/>
+		<img src="{{ absolute_url(asset('images/logocinecondeblanc.png')) }}" alt="Logo!" class="logo"/>
 		<h1>
 			le royal
 		</h1>
@@ -35,13 +38,14 @@
 		<a href="javascript:void(0);" class="icon" onclick="myFunction()">
 			<a href="{{path('prog')}}" class="{% if active_tab == 'index' %} active{% endif %}">A l'affiche</a>
 			<a href="{{path('event')}}" class="{% if active_tab == 'event' %} active{% endif %}">Les évènements</a>
+			<a href="{{path('aboutus')}}" class="{% if active_tab == 'aboutus' %} active{% endif %}">Qui sommes nous ?</a>
 			<a href="{{path('tarifs')}}" class="{% if active_tab == 'tarifs' %} active{% endif %}">Tarifs</a>
 			<a href="{{path('contact')}}" class="{% if active_tab == 'contact' %} active{% endif %}">Contact</a>
 			{# {% if not app.user %}
-						<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
-						{% else %}
-						<a href="{{path('security_logout')}}" class="">deconnexion</a>
-						{% endif %} #}
+				<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
+				{% else %}
+				<a href="{{path('security_logout')}}" class="">deconnexion</a>
+				{% endif %} #}
 		</a>
 
 	</nav>
@@ -67,7 +71,7 @@ x.className = "topnav";
 	<footer>
 		<p>
 			<a href="{{path('download',{'file':"affichette"})}}">Télécharger l'affichette</a>
-			<a href="{{path('download',{'file':"programme"})}}">Téléchrager  notre programme</a>
+			<a href="{{path('download',{'file':"programme"})}}">Télécharger notre programme</a>
 		</p>
 		<p>Suivez-nous :
 			<a href="https://www.facebook.com/cinecondesurnoireau">
@@ -75,7 +79,7 @@ x.className = "topnav";
 			</a>
 		</p>
 		<p>
-			<a href="{{path('mentions-legales')}}">Mentions legales</a>
+			<a href="{{path('mentions-legales')}}">Mentions légales</a>
 		</p>
 		<p>
 			Image de fond par

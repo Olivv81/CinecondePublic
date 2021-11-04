@@ -24,14 +24,15 @@ class ContactController extends AbstractController
             $contactFormData = $form->getData();
 
             $message = (new \Swift_Message('message du site'))
-                ->setFrom('emioli02008@gmx.fr')
-                ->setTo('emioli2008@gmx.fr')
+                ->setFrom('***REMOVED***')
+                ->setTo('***REMOVED***')
                 ->setBody($contactFormData['message'] . '<br>' . $contactFormData['nom'] . '<br>' . $contactFormData['email'], 'text/html');
 
 
 
             $mailer->send($message);
             $this->addFlash('success', 'Vore message a été envoyé');
+            return $this->redirectToRoute("prog");
         }
         return $this->render('contact/index.html.twig', [
             'active_tab' => 'contact',

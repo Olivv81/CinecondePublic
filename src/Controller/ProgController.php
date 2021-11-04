@@ -2,31 +2,24 @@
 
 namespace App\Controller;
 
-use App\Controller\Allocine;
 use App\Entity\Film;
 use App\Entity\Seance;
 use App\Entity\Horaire;
 use App\Form\EventType;
 use App\Entity\Evenement;
+use App\Controller\Allocine;
+use App\Form\EventwihtoutPictureType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-// use Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader;
-// use Doctrine\Persistence\ObjectManager;
-// use Exception;
-// use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-// use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-// use Symfony\Component\Form\Extension\Core\Type\TextType;
-// use DateTime;
-// use Doctrine\ORM\EntityRepository;
-// use SimpleXMLElement;
+
 
 class ProgController extends AbstractController
 {
     /**
-     * @Route("/prog", name="prog")
+     * @Route("/", name="prog")
      */
 
 
@@ -46,10 +39,10 @@ class ProgController extends AbstractController
 
 
 
-        function certificate($idFilm)
+        function certificate($idfilm)
         {
             $allocine = new Allocine();
-            $result = $allocine->get($idFilm);
+            $result = $allocine->get($idfilm);
             $movie = (json_decode($result, true));
             $test = empty($movie["movie"]['movieCertificate']['certificate']["$"]);
 
@@ -63,8 +56,9 @@ class ProgController extends AbstractController
             }
         }
 
+
         foreach ($lesfilms->xpath('//film') as $filmxml) {
-            //dd($filmxml->horaire);
+
             $filmexistant = $repofilm->findOneBy(['idFilm' => intval($filmxml['id'])]);
 
             // echo ($filmexistant . '<br/>');
@@ -84,6 +78,7 @@ class ProgController extends AbstractController
                     ->setNationalite($filmxml['nationalite'])
                     ->setSynopsis($filmxml['synopsis'])
                     ->setAffichette($filmxml['affichette'])
+                    ->setAffichette250(str_replace(".fr/", ".fr/r_250_x", $filmxml['affichette']))
                     ->setVideo($filmxml['video'])
                     ->setVisaNumber(intval($filmxml['visanumber']))
                     ->setClassification(certificate(intval($filmxml['id'])));
@@ -150,20 +145,39 @@ class ProgController extends AbstractController
         // $film = 272014;
         // $prog = $this->getDoctrine()->getRepository(Horaire::class)->FilmDetail($film);
         $hor = $this->getDoctrine()->getRepository(Horaire::class)->FilmByOneHoraire($today);
-
         $activetab = "index";
 
         return $this->render('prog/index.html.twig', [
-            'controller_name' => 'ProgController',
+            // 'controller_name' => 'ProgController',
             'schedule_just_aftertoday' => $hor,
             'active_tab' => $activetab
-
         ]);
+    }
+
+    /**
+     * @Route("/removall", name="removall")
+     */
+    public function removeallmovies()
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $manager = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $movies = $repo->findAll();
+        foreach ($movies as $movies) {
+            $firstmovie = $repo->findOneBy([]);
+            $firstmovie = $manager->merge($firstmovie);
+            $manager->remove($firstmovie);
+            $manager->flush();
+        }
+
+
+        return $this->redirectToRoute('prog');
     }
 
     /**
      * @Route("/fdetail/{id}", name="fdetail")
      */
+
     public function FDetail($id)
     {
         $today = new \DateTime("now");
@@ -197,102 +211,21 @@ class ProgController extends AbstractController
         ]);
     }
     /**
-     * @Route("/event/new", name="event_create")
-     * @Route("/event/{id}/edit", name="event-edit")
-     */
-    public function form(Evenement $event = null, Request $request)
-    {
-        $manager = $this->getDoctrine()->getManager();
-
-        if (!$event) {
-            $event = new Evenement();
-        }
-
-        $form = $this->createForm(EventType::class, $event);
-
-        $form->handleRequest($request);
-
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $manager->persist($event);
-            $manager->flush();
-            return $this->redirectToRoute('event');
-        }
-
-        return $this->render('prog/create.html.twig', [
-            'formEvent' => $form->createView(),
-            'active_tab' => "",
-            'editMode' => $event->getId() !== null
-        ]);
-    }
-    /**
-     * @Route("/event/{id}/supconfirm", name="event-remove-confrim")
-     */
-    public function eventRemoveconfirm($id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
-        $event = $repo->find($id);
-
-        return $this->render('prog/eventremove.html.twig', [
-            'active_tab' => "",
-            'event' => $event
-        ]);
-    }
-    /**
-     * @Route("/event/{id}/sup", name="event-remove")
-     */
-    public function eventRemove($id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
-        $event = $repo->find($id);
-        $em->remove($event);
-        $em->flush();
-
-        return $this->redirectToRoute('event');
-    }
-
-
-    /**
-     * @Route("/event", name="event")
-     */
-    public function Event()
-    {
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
-        $event = $repo->findby(array(), array('date' => 'asc'));
-
-
-        return $this->render('prog/event.html.twig', [
-            'event' => $event,
-            'active_tab' => "event",
-        ]);
-    }
-    /**
-     * @Route("/evdetail/{id}", name="evdetail")
-     */
-    public function EvDetail($id)
-    {
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
-        $event = $repo->find($id);
-        $movies = $this->getDoctrine()->getRepository(Film::class)->moviePerEvent($event);
-
-
-        return $this->render('prog/evdetail.html.twig', [
-            'event' => $event,
-            'active_tab' => "event",
-            'movies' => $movies,
-        ]);
-    }
-    /**
      * @Route("/tarifs", name="tarifs")
      */
     public function Tarifs()
     {
         return $this->render('prog/tarifs.html.twig', [
             'active_tab' => "tarifs",
+        ]);
+    }
+    /**
+     * @Route("/aboutus", name="aboutus")
+     */
+    public function Aboutus()
+    {
+        return $this->render('aboutus.html.twig', [
+            'active_tab' => "aboutus",
         ]);
     }
     /**
@@ -336,5 +269,145 @@ class ProgController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('prog');
+    }
+
+    /**
+     * @Route("/event", name="event")
+     */
+    public function Event()
+    {
+        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $event = $repo->findby(array(), array('date' => 'asc'));
+        } else {
+            $event = $repo->eventAfterToday();
+        }
+
+        return $this->render('prog/event.html.twig', [
+            'event' => $event,
+            'active_tab' => "event",
+        ]);
+    }
+
+    /**
+     * @Route("/evdetail/{id}", name="evdetail")
+     */
+    public function EvDetail($id)
+    {
+        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $event = $repo->find($id);
+        $movies = $this->getDoctrine()->getRepository(Film::class)->moviePerEvent($event);
+
+
+        return $this->render('prog/evdetail.html.twig', [
+            'event' => $event,
+            'active_tab' => "event",
+            'movies' => $movies,
+        ]);
+    }
+
+    /**
+     * @Route("/event/new", name="event_create")
+     * @Route("/event/{id}/edit", name="event-edit")
+     */
+    public function form(Evenement $event = null, Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $manager = $this->getDoctrine()->getManager();
+
+        if (!$event) {
+            $event = new Evenement();
+        }
+
+        if ($event->getImageName() == null) {
+            $form = $this->createForm(EventwihtoutPictureType::class, $event);
+        } else {
+            $form = $this->createForm(EventType::class, $event);
+        }
+
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manager->persist($event);
+            $manager->flush();
+            return $this->redirectToRoute('event');
+        }
+
+        return $this->render('prog/create.html.twig', [
+            'formEvent' => $form->createView(),
+            'active_tab' => "",
+            'event' => $event,
+            'editMode' => $event->getId() !== null,
+            'eventFileName' => $event->getImageName()
+        ]);
+    }
+    /**
+     * @Route("/event/{id}/sup", name="event-remove")
+     */
+    public function eventRemove($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $event = $repo->find($id);
+
+        $em->remove($event);
+        $em->flush();
+
+        return $this->redirectToRoute('event');
+    }
+    /**
+     * @Route("/event/{id}/supconfirm", name="event-remove-confrim")
+     */
+    public function eventRemoveconfirm($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $event = $repo->find($id);
+
+        return $this->render('prog/eventremove.html.twig', [
+            'active_tab' => "",
+            'event' => $event
+        ]);
+    }
+
+    /**
+     * @Route("/event/{id}/supimage", name="picture-remove")
+     */
+    public function pictureRemove($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $event = $repo->find($id);
+
+        return $this->render('prog/pictureremove.html.twig', [
+            'active_tab' => "",
+            'event' => $event
+        ]);
+    }
+    /**
+     * @Route("/event/{id}/supimageconf", name="picture-remove-confirm")
+     */
+    public function pictureRemoveConfirm($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $event = $repo->find($id);
+        $filename = $event->getImageName();
+
+        \unlink('../public/images/event/' . $filename);
+
+        $event->setImageName(null);
+
+        $em->flush();
+
+        return $this->redirectToRoute('event-edit', [
+            'id' => $event->getId()
+        ]);
     }
 }

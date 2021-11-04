@@ -62,4 +62,17 @@ class EvenementRepository extends ServiceEntityRepository
             ->getResult();
         return $query;
     }
+    public function eventAfterToday()
+    {
+        $date = new \DateTime("now");
+
+        $query = $this->createQueryBuilder('e')
+            ->select('e')
+            ->Where(':day BETWEEN e.date AND e.dateFin OR e.date >=:day')
+            ->setParameter('day', $date->format("Y-m-d") . " 00:00:00")
+            ->orderBy('e.date', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $query;
+    }
 }

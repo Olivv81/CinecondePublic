@@ -27,8 +27,15 @@
 		{{form_row(formEvent.tarifs,{'label': 'Tarif(s) :','attr':{'placeholder': "tarif(s)"}})}}
 		{{form_row(formEvent.date)}}
 		{{form_row(formEvent.dateFin)}}
-		{{form_row(formEvent.visuel,{'attr':{'placeholder': "url de l' image"}})}}
 		{# {{form_row(formEvent.films)}} #}
+		{% if eventFileName %}
+			<p>Image :
+				{{eventFileName}}</p>
+			<a href="{{path('picture-remove',{'id':event.id} )}}">Supprimer l'image</a>
+
+		{% else %}
+			{{form_row(formEvent.imageFile)}}
+		{% endif %}
 
 		<div>
 			{{form_label(formEvent.films)}}
@@ -36,11 +43,12 @@
 		</div>
 		{{form_row(formEvent.video)}}
 
+
 		<button type="submit" class="btn">
 			{% if editMode %}
 				Enregistrer !
 			{% else %}
-				Ajouter l'article
+				Ajouter l'évènement
 			{% endif %}
 		</button>
 		{{form_end(formEvent)}}

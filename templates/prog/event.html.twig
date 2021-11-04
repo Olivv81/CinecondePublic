@@ -13,15 +13,17 @@
 	<section class="prog">
 		{% if event is empty %}
 			<article>
-				Il n'y à plus d'évènement planifié pour le moment.
+				Il n'y a pas d'évènement planifié pour le moment.
 			</article>
 		{% endif %}
 		{% for event in event %}
 			<article>
 				<a href="{{path('evdetail', {'id':event.id})}}">
-					<img src="{{event.visuel}}" class="affiche">
+
+					<img src="{{ absolute_url(asset('images/event/'~event.imagename)) }}" class="affiche" alt="visuel de l'évènement"/>
+
 				</a>
-				<h2>{{event.titre}}</h2>
+				<h2>{{event.titre|nl2br}}</h2>
 				<ul>
 
 					<li>
