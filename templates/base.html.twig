@@ -3,14 +3,17 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<meta charset="UTF-8">
 		<meta name="keywords" content="cinéma, condé sur noireau, condé en normandie, le royal, sortir, sortie, film">
 		<meta name="description" content="Présentation de l'association et de la programmation du cinéma Le Royal">
 		<meta name="author" content="Olivier CAILLAUD GAFSI">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta property="og:image" content="{{ absolute_url(asset('images/logocineconde.png')) }}"/>
+		{% block meta %}
+			<meta property="og:title" content="CineCondé"/>
+			<meta property="og:type" content="website"/>
+			<meta property="og:image" content="{{ absolute_url(asset('images/logocineconde.png')) }}"/>
+			<meta property="og:url" content="https://www.cineconde.fr"/>
+		{% endblock %}
 		<link rel="shortcut icon" type="image/png" href="{{ absolute_url(asset('images/favicon.png')) }}"/>
-
 		<title>
 			{% block title %}
 				CinéCondé - Le Royal
@@ -22,18 +25,21 @@
 		{% endblock %}
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('jourbtn') }}
+
 		{% endblock %}
 	</head>
-	<header>
 
+	<header>
 		<img src="{{ absolute_url(asset('images/logocinecondeblanc.png')) }}" alt="Logo!" class="logo"/>
 		<h1>
 			le royal
 		</h1>
 		<div class="descriptiontitre">
-			Cinéma associatif de Condé en Normandie
+			Votre cinéma associatif de Condé en Normandie
 		</div>
 	</header>
+
 	<nav class="topnav" id="myTopnav">
 		<a href="javascript:void(0);" class="icon" onclick="myFunction()">
 			<a href="{{path('prog')}}" class="{% if active_tab == 'index' %} active{% endif %}">A l'affiche</a>
@@ -42,12 +48,20 @@
 			<a href="{{path('tarifs')}}" class="{% if active_tab == 'tarifs' %} active{% endif %}">Tarifs</a>
 			<a href="{{path('contact')}}" class="{% if active_tab == 'contact' %} active{% endif %}">Contact</a>
 			{# {% if not app.user %}
-				<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
-				{% else %}
-				<a href="{{path('security_logout')}}" class="">deconnexion</a>
-				{% endif %} #}
+												<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
+												{% else %}
+												<a href="{{path('security_logout')}}" class="">deconnexion</a>
+												{% endif %} #}
 		</a>
 
+
+		<form class='dayfilter' name="dayFilter" action={{path('jour', { 'jour':app.request.query.get("jour") } )}} methode="get">
+
+			<label for="jour" class=""></label>
+			<input type="date" id="jour" name="jour">
+
+
+		</form>
 	</nav>
 
 
@@ -62,12 +76,10 @@ x.className = "topnav";
 }
 	</script>
 
-
 	<body>
 		{% block body %}{% endblock %}
-
-
 	</body>
+
 	<footer>
 		<p>
 			<a href="{{path('download',{'file':"affichette"})}}">Télécharger l'affichette</a>

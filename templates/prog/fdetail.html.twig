@@ -2,15 +2,14 @@
 {% block body %}
 	<div class='undernav'>
 		<input type="button" class="btn" value="Retour!" onclick="history.back()">
-		<h1>Détail du film</h1>
-		{% include "dayfilter.html.twig" %}
+		<h2>Détail du film</h2>
 	</div>
 	<article class="detail">
 
-		<img src="{{film.affichette}}" class="affiche">
+		<img src="{{film.affichette}}" class="affiche" alt="affiche">
 
 		<div class="description">
-			<h2>{{film.titre}}</h2>
+			<h3>{{film.titre}}</h3>
 			<ul>
 				<li>de
 					{{film.realisateurs}}</li>
@@ -36,14 +35,14 @@
 			{% endif %}
 
 
-			<h3>Synopsis :</h3>
+			<h4>Synopsis :</h4>
 			<p>
 				{{film.synopsis}}
 			</p>
 		</div>
 
 		<div class="seance">
-			<h3>Séances :</h3>
+			<h4>Séances :</h4>
 			<ul>
 				{% if movie_schedule is empty %}
 					<p>Il n'y a pas de séance programmée pour ce film ...</p>

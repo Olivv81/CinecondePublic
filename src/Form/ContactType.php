@@ -18,6 +18,10 @@ class ContactType extends AbstractType
             ->add('email', EmailType::class, [])
             ->add('message', TextareaType::class, [
                 'attr' => ['rows' => 6],
+            ])
+            // Pot de miel :
+            ->add('age', TextType::class, [
+                'required' => \false,
             ]);
     }
 

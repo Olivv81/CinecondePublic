@@ -6,8 +6,8 @@
 {% block body %}
 	<div class='undernav'>
 		<input type="button" class="btn" value="Retour!" onclick="history.back()">
-		<h1>{{app.request.get('jour')|format_datetime('full', 'none', locale='fr')}}</h1>
-		{% include "dayfilter.html.twig" %}
+		<h2>{{app.request.get('jour')|format_datetime('full', 'none', locale='fr')}}</h2>
+
 	</div>
 	<section class="jour">
 		{% if (event == null) and (schedule == null) %}
@@ -17,14 +17,14 @@
 		{% endif %}
 		{% if event != null %}
 			<div class="daysection">
-				<h2>Evènement(s)</h2>
+				<h3>Evènement(s)</h3>
 				<div>
 					{% for event in event %}
 						<article>
 							<a href="{{path('evdetail', {'id':event.id})}}">
 								<img src="{{ absolute_url(asset('images/event/'~event.imagename)) }}" class="affiche"/>
 							</a>
-							<h2>{{event.titre}}</h2>
+							<h3>{{event.titre}}</h3>
 							<ul>
 								{% if event.date|date("Hi") != "0000" %}
 									<li>
@@ -41,14 +41,14 @@
 
 		{% if schedule != null %}
 			<div class="daysection">
-				<h2>Film(s)</h2>
+				<h3>Film(s)</h3>
 				<div>
 					{% for schedule in schedule %}
 						<article>
 							<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
 								<img src="{{schedule.seance.film.affichette}}" class="affiche">
 							</a>
-							<h2>{{schedule.seance.film.titre}}</h2>
+							<h3>{{schedule.seance.film.titre}}</h3>
 							<ul>
 								<li>
 									{{schedule.seance.film.realisateurs}}

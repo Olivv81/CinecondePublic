@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('multiselect', './assets/multiselect.js')
+    .addEntry('jourbtn', './assets/jourbtn.js')
 
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)

@@ -1,5 +1,6 @@
 
 // Multiselect du formulaire de création d'évènement:
+
 import './styles/multiselect.css';
 
 // Initialize function, create initial tokens with itens that are already selected by the user

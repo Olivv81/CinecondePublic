@@ -1,14 +1,22 @@
 {% extends "base.html.twig" %}
+
+{% block meta %}
+	<meta property="og:title" content="Ciné-Condé - Evènement"/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:image" content="{{ absolute_url(asset('images/event/'~event.imagename))}}"/>
+	<meta property="og:url" content="https://cineconde.fr/evdetail/{{event.id}}"/>
+	<meta property="og:description" content="{{event.titre}}"/>
+{% endblock %}
+
 {% block body %}
 	<div class='undernav'>
 		<input type="button" class="btn" value="Retour!" onclick="history.back()">
 
-		<h1>Détail de l'évènement</h1>
+		<h2>Détail de l'évènement</h2>
 		{% if is_granted('ROLE_USER') %}
 			<a href="{{path('event-edit', {'id':event.id} )}}">Modifier</a>
 			<a href="{{path("event-remove-confrim", {'id':event.id} )}}">Supprimer</a>
 		{% endif %}
-		{% include "dayfilter.html.twig" %}
 	</div>
 
 	<article class="detail">
@@ -17,7 +25,7 @@
 
 		<div class="description">
 
-			<h2>{{event.titre|nl2br}}</h2>
+			<h3>{{event.titre|nl2br}}</h3>
 			<p>{{event.date|format_datetime('full', 'none', locale='fr')}}
 				{% if event.date|date("Hi") != "0000" %}
 					à
@@ -31,17 +39,17 @@
 			</p>
 
 
-			<h3>Description :</h3>
+			<h4>Description :</h4>
 			<p>
 				{{event.description|nl2br}}
 			</p>
 			<ul>
 				<li>Tarif(s) :
-					{{event.tarifs}}
+					{{event.tarifs|nl2br}}
 				</li>
 			</ul>
 			{% if movies is not empty %}
-				<h3>Film(s):</h3>
+				<h4>Film(s):</h4>
 				<ul class="filmseven">
 
 					{% for movie in movies %}

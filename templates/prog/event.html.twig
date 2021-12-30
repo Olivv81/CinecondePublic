@@ -3,11 +3,11 @@
 
 {% block body %}
 	<div class='undernav'>
-		<h1>Evènement(s)</h1>
+		<h2>Evènement(s)</h2>
 		{% if is_granted('ROLE_USER') %}
 			<a href="{{path('event_create')}}">Créer un nouvel évènement</a>
 		{% endif %}
-		{% include "dayfilter.html.twig" %}
+
 	</div>
 
 	<section class="prog">
@@ -23,7 +23,7 @@
 					<img src="{{ absolute_url(asset('images/event/'~event.imagename)) }}" class="affiche" alt="visuel de l'évènement"/>
 
 				</a>
-				<h2>{{event.titre|nl2br}}</h2>
+				<h3>{{event.titre|nl2br}}</h3>
 				<ul>
 
 					<li>

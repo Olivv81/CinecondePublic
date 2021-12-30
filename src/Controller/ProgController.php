@@ -78,7 +78,7 @@ class ProgController extends AbstractController
                     ->setNationalite($filmxml['nationalite'])
                     ->setSynopsis($filmxml['synopsis'])
                     ->setAffichette($filmxml['affichette'])
-                    ->setAffichette250(str_replace(".fr/", ".fr/r_250_x", $filmxml['affichette']))
+                    ->setAffichette250(str_replace(".fr/", ".fr/r_300_x", $filmxml['affichette']))
                     ->setVideo($filmxml['video'])
                     ->setVisaNumber(intval($filmxml['visanumber']))
                     ->setClassification(certificate(intval($filmxml['id'])));

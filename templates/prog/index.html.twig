@@ -5,8 +5,7 @@
 
 {% block body %}
 	<div class='undernav'>
-		<h1>Films à l'affiche</h1>
-		{% include "dayfilter.html.twig" %}
+		<h2>Films à l'affiche</h2>
 	</div>
 
 	<section class="prog">
@@ -15,7 +14,7 @@
 				<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
 					<img src="{{schedule.seance.film.affichette250}}" class="affiche" alt="affiche du film">
 				</a>
-				<h2>{{schedule.seance.film.titre}}</h2>
+				<h3>{{schedule.seance.film.titre}}</h3>
 				<ul>
 					<li>
 						{{schedule.seance.film.realisateurs}}

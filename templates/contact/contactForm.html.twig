@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<div class='undernav'>
+		<h2>Contactez nous :</h2>
+
+	</div>
+	<div class="submitform">
+
+		{{ form_start(formContact) }}
+		<div class="pdm">
+			{{ form_row(formContact.age, {}) }}
+		</div>
+
+		{{ form_row(formContact.nom, {'label': 'Prénom :','attr': {'class': 'form-control'}}) }}
+		{{ form_row(formContact.email, {'label': 'Email :','attr': {'class': 'form-control'}}) }}
+		{{ form_row(formContact.message, {'label': 'Votre message :','attr': {'class': 'form-control'}}) }}
+		<input type="submit" value="Envoyer !" class="btn btn-primary py-3 px-5">
+		{{ form_end(formContact) }}
+
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+		<h4>Adresse :</h4>
+		<p>
+			<strong>Association Ciné-Condé</strong><br>
+			Cinéma Le Royal<br>
+			Quai des Challouets<br>
+			14110 Condé en Normandie
+		</p>
+	</div>
+
+
+{% endblock %}

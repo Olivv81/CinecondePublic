@@ -22,21 +22,34 @@ class ContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $contactFormData = $form->getData();
+            if (empty($contactFormData['age'])) {
+                $message = (new \Swift_Message('message du site'))
+                    ->setFrom('***REMOVED***')
+                    ->setTo('***REMOVED***')
+                    ->setCc('***REMOVED***')
+                    ->setBody($contactFormData['message'] . '<br>' . $contactFormData['nom'] . '<br>' . $contactFormData['email'], 'text/html');
 
-            $message = (new \Swift_Message('message du site'))
-                ->setFrom('***REMOVED***')
-                ->setTo('***REMOVED***')
-                ->setBody($contactFormData['message'] . '<br>' . $contactFormData['nom'] . '<br>' . $contactFormData['email'], 'text/html');
 
 
-
-            $mailer->send($message);
-            $this->addFlash('success', 'Vore message a été envoyé');
-            return $this->redirectToRoute("prog");
+                $mailer->send($message);
+                $this->addFlash('success', 'Votre message a été envoyé');
+                return $this->redirectToRoute("confirm");
+            }
+            return $this->redirectToRoute("confirm");
         }
-        return $this->render('contact/index.html.twig', [
+        return $this->render('contact/contactForm.html.twig', [
             'active_tab' => 'contact',
-            'our_form' => $form->createView()
+            'formContact' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/confirm", name="confirm")
+     */
+    public function confirm()
+    {
+        return $this->render('contact/confirmation.html.twig', [
+            'active_tab' => '',
         ]);
     }
 }

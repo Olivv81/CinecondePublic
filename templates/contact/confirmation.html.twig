@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<section>
+		<article>
+			{% for message in app.flashes('success') %}
+				<p>{{ message }}</p>
+			</article>
+
+
+		{% endfor %}
+	</section>
+
+
+{% endblock %}
