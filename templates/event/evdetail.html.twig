@@ -14,8 +14,8 @@
 
 		<h2>Détail de l'évènement</h2>
 		{% if is_granted('ROLE_USER') %}
-			<a href="{{path('event-edit', {'id':event.id} )}}">Modifier</a>
-			<a href="{{path("event-remove-confrim", {'id':event.id} )}}">Supprimer</a>
+			<a href="{{path('event-edit', {'id':event.id} )}}" class="iconadmin"><img src="{{ absolute_url(asset('images/editicon.png')) }}" alt="edit"/></a>
+			<a href="{{path("event-remove-confrim", {'id':event.id} )}}" class="iconadmin"><img src="{{ absolute_url(asset('images/trashicon.png')) }}" alt="edit"/></a>
 		{% endif %}
 	</div>
 
@@ -63,11 +63,25 @@
 
 
 			</ul>
-
-		</div>
-		{% if event.video %}
-			<div class="video">
-				<iframe src="https://www.youtube.com/embed/{{event.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			{% if event.video %}
+				<div class="video">
+					<iframe src="https://www.youtube.com/embed/{{event.video}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				</div>
+			{% else %}
+				{% if event.videoVimeo %}
+					<div class="video" data-vimeo-url="{{event.videoVimeo}}" id="{video01_name}"></div>
+				{% endif %}
 			{% endif %}
-		</article>
-	{% endblock %}
+		</div>
+
+	</article>
+
+	<script src="https://player.vimeo.com/api/player.js"></script>
+	<script>
+		var video01Player = new Vimeo.Player('BAVimeo');
+video01Player.on('play', function () {
+console.log('Played the first video');
+});
+	</script>
+
+{% endblock %}

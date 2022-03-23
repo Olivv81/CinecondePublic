@@ -19,30 +19,21 @@
 
 
 	<div class='submitform'>
-		<h2>Création d'un événement</h2>
-
+		<h3>Création d'un événement</h3>
 		{{form_start(formEvent)}}
-		{{form_row(formEvent.titre,{'label': 'Titre :','attr':{'placeholder': "titre de l' évènement"}})}}
-		{{form_row(formEvent.description,{'label': 'Description :','attr':{'placeholder': "descritpion de l'évènement"}})}}
-		{{form_row(formEvent.tarifs,{'label': 'Tarif(s) :','attr':{'placeholder': "tarif(s)"}})}}
-		{{form_row(formEvent.date)}}
-		{{form_row(formEvent.dateFin)}}
-		{# {{form_row(formEvent.films)}} #}
+
+
 		{% if eventFileName %}
-			<p>Image :
-				{{eventFileName}}</p>
-			<a href="{{path('picture-remove',{'id':event.id} )}}">Supprimer l'image</a>
 
-		{% else %}
-			{{form_row(formEvent.imageFile)}}
+			<div>
+				<a href="{{path('picture-remove',{'id':event.id} )}}">
+					Supprimer l'image :
+					{{eventFileName}}</a>
+			</div>
+
+
 		{% endif %}
-
-		<div>
-			{{form_label(formEvent.films)}}
-			{{form_widget(formEvent.films, {'attr':{'multiple data-multi-select-plugin':"", 'multiple':""}})}}
-		</div>
-		{{form_row(formEvent.video)}}
-
+		{{ form_rest(formEvent) }}
 
 		<button type="submit" class="btn">
 			{% if editMode %}

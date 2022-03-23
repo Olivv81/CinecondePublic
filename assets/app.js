@@ -9,7 +9,9 @@
 // import './styles/app.css';
 import './styles/styles.css';
 import './styles/multiselect.css';
+import './styles/form.css';
 
 // start the Stimulus application
 // import './bootstrap';
+
 

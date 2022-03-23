@@ -48,10 +48,10 @@
 			<a href="{{path('tarifs')}}" class="{% if active_tab == 'tarifs' %} active{% endif %}">Tarifs</a>
 			<a href="{{path('contact')}}" class="{% if active_tab == 'contact' %} active{% endif %}">Contact</a>
 			{# {% if not app.user %}
-												<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
-												{% else %}
-												<a href="{{path('security_logout')}}" class="">deconnexion</a>
-												{% endif %} #}
+																		<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
+																		{% else %}
+																		<a href="{{path('security_logout')}}" class="">deconnexion</a>
+																		{% endif %} #}
 		</a>
 
 
@@ -83,6 +83,7 @@ x.className = "topnav";
 	<footer>
 		<p>
 			<a href="{{path('download',{'file':"affichette"})}}">Télécharger l'affichette</a>
+
 			<a href="{{path('download',{'file':"programme"})}}">Télécharger notre programme</a>
 		</p>
 		<p>Suivez-nous :

@@ -52,17 +52,22 @@ class HoraireRepository extends ServiceEntityRepository
         // $date = new \DateTime();
 
         $query = $this->createQueryBuilder('h')
-            ->select('h')
+            ->Select('h')
             ->Where('h.horaire >= :today')
             ->setParameter('today', $today->Format('Y-m-d H:i:s'))
+            ->orderBy('h.horaire', 'ASC')
+
             ->Join('h.seance', 's')
             ->Join('s.film', 'f')
-            ->groupBy('f.titre')
-            ->orderBy('h.horaire', 'ASC')
+
+
+
             ->getQuery()
             ->getResult();
         return $query;
     }
+
+
     public function FilmDetail($film)
     {
         $query = $this->createQueryBuilder('h')
@@ -76,6 +81,8 @@ class HoraireRepository extends ServiceEntityRepository
             ->getResult();
         return $query;
     }
+
+
     public function movieByDay($jour)
     {
         $date = new \DateTime($jour);
@@ -96,6 +103,8 @@ class HoraireRepository extends ServiceEntityRepository
             ->getResult();
         return $query;
     }
+
+
     public function schedulebymovie($film, $today)
     {
 

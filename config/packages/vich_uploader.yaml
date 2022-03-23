@@ -6,3 +6,16 @@ vich_uploader:
             uri_prefix: /images/event
             upload_destination: '%kernel.project_dir%/public/images/event'
             namer: Vich\UploaderBundle\Naming\UniqidNamer
+
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+
+        film:
+            uri_prefix: /images/film
+            upload_destination: '%kernel.project_dir%/public/images/film'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true

@@ -20,7 +20,7 @@ class Seance
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="boolean", options={"default":"0"})
      */
     private $vo;
 
@@ -46,7 +46,8 @@ class Seance
     private $film;
 
     /**
-     * @ORM\OneToMany(targetEntity=Horaire::class, mappedBy="seance", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Horaire::class, mappedBy="seance", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OrderBy({"horaire" = "ASC"})
      */
     private $horaires;
 
@@ -60,12 +61,19 @@ class Seance
         return $this->id;
     }
 
-    public function getVo(): ?string
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getVo(): ?bool
     {
         return $this->vo;
     }
 
-    public function setVo(?string $vo): self
+    public function setVo(?bool $vo): self
     {
         $this->vo = $vo;
 
@@ -128,14 +136,10 @@ class Seance
         return $this->horaires;
     }
 
-    public function addHoraire(Horaire $horaire): self
+    public function addHoraire(Horaire $horaire): void
     {
-        if (!$this->horaires->contains($horaire)) {
-            $this->horaires[] = $horaire;
-            $horaire->setSeance($this);
-        }
-
-        return $this;
+        $horaire->setSeance($this);
+        $this->horaires->add($horaire);
     }
 
     public function removeHoraire(Horaire $horaire): self

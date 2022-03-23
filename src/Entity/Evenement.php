@@ -86,6 +86,11 @@ class Evenement
      */
     private $video;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $videoVimeo;
+
     public function __construct()
     {
         $this->films = new ArrayCollection();
@@ -251,6 +256,18 @@ class Evenement
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getVideoVimeo(): ?string
+    {
+        return $this->videoVimeo;
+    }
+
+    public function setVideoVimeo(?string $videoVimeo): self
+    {
+        $this->videoVimeo = $videoVimeo;
 
         return $this;
     }

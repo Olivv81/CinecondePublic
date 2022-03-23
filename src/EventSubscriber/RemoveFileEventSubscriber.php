@@ -2,13 +2,15 @@
 
 namespace App\EventSubscriber;
 
-use App\Message\RemoveProductImageMessage;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Vich\UploaderBundle\Event\Event;
 use Vich\UploaderBundle\Event\Events;
+use App\Message\RemoveProductImageMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RemoveFileEventSubscriber implements EventSubscriberInterface
+
+
 {
 
     private $messageBus;

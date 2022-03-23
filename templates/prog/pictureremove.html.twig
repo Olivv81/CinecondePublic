@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+{% block body %}
+	<section class="prog">
+		<article>
+			<h3>Voulez vous vraiment supprimer cette image ?</h3>
+
+			<img src="{{ absolute_url(asset('images/film/'~movie.imagename)) }}" class="affiche">
+			<h3>{{movie.titre}}</h3>
+			<button class="btn" onclick="window.location.href = '{{path('movie-picture-remove-confirm', {'id':movie.id} )}}';">Oui je confirme la suppression de l'image !</button>
+
+		</article>
+
+	</section>
+
+{% endblock %}

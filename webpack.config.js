@@ -23,6 +23,8 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('multiselect', './assets/multiselect.js')
     .addEntry('jourbtn', './assets/jourbtn.js')
+    .addEntry('addSeance', './assets/addSeance.js')
+    .addEntry('addHoraire', './assets/addHoraire.js')
 
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
@@ -73,6 +75,7 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+    .autoProvidejQuery()
     ;
 
 module.exports = Encore.getWebpackConfig();

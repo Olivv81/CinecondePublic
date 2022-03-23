@@ -39,12 +39,20 @@ class Horaire
 
     /**
      * @ORM\ManyToOne(targetEntity=Seance::class, inversedBy="horaires")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $seance;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getHoraire(): ?\DateTimeInterface
@@ -105,5 +113,11 @@ class Horaire
         $this->seance = $seance;
 
         return $this;
+    }
+    public function addSeance(seance $seance): void
+    {
+        if (!$this->seances->contains($seance)) {
+            $this->seances->add($seance);
+        }
     }
 }

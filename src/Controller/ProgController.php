@@ -5,16 +5,18 @@ namespace App\Controller;
 use App\Entity\Film;
 use App\Entity\Seance;
 use App\Entity\Horaire;
-use App\Form\EventType;
+use App\Form\MovieType;
+use App\Form\SeanceType;
 use App\Entity\Evenement;
 use App\Controller\Allocine;
-use App\Form\EventwihtoutPictureType;
+use App\Form\MovieWithoutPictureType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentToken;
+use Symfony\Component\Validator\Constraints\Length;
 
 class ProgController extends AbstractController
 {
@@ -105,8 +107,9 @@ class ProgController extends AbstractController
                 if (empty($seanceexistante)) {
                     $seance = new Seance();
 
+
                     $seance
-                        ->setVo($seancexml['vo'])
+                        ->setVo(boolval(intval($seancexml['vo'])))
                         ->setVersion($seancexml['version'])
                         ->setProjection($seancexml['projection'])
                         ->setSoustitre($seancexml['soustitre'])
@@ -142,9 +145,27 @@ class ProgController extends AbstractController
 
 
         $today = new \DateTime("now");
-        // $film = 272014;
-        // $prog = $this->getDoctrine()->getRepository(Horaire::class)->FilmDetail($film);
+
         $hor = $this->getDoctrine()->getRepository(Horaire::class)->FilmByOneHoraire($today);
+        // $hor = $this->getDoctrine()->getRepository(Film::class)->getAfterToday($today);
+        // dd($hor[1]->getSeance()->getId());
+
+
+        $movieTab = [];
+        $nbHor = count($hor);
+        for ($i = 0; $i < $nbHor; $i = $i + 1) {
+            $film = $hor[$i]->getSeance()->getfilm()->getId();
+
+            // dump("idh=" . $hor[$i]->getId() . " idf=" . $hor[$i]->getSeance()->getfilm()->getId());
+
+            if (in_array($film, $movieTab)) {
+                // dump("horsup" . $hor[$i]->getId());
+                unset($hor[$i]);
+            } else {
+                array_push($movieTab, $film);
+            }
+        }
+
         $activetab = "index";
 
         return $this->render('prog/index.html.twig', [
@@ -186,13 +207,173 @@ class ProgController extends AbstractController
         $horaires = $this->getDoctrine()->getRepository(Horaire::class)->schedulebymovie($film, $today);
         // $horaires = $this->getDoctrine()->getRepository(Horaire::class)->FilmDetail($id);;
 
-
         return $this->render('prog/fdetail.html.twig', [
             'film' => $film,
             'movie_schedule' => $horaires,
             'active_tab' => ""
         ]);
     }
+
+
+    /**
+     * @Route("/film/new", name="movie-create")
+     * @Route("/film/{id}/edit", name="movie-edit")
+     */
+    public function form(Film $film = null, Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $manager = $this->getDoctrine()->getManager();
+
+        if (!$film) {
+            $film = new Film();
+            $manager->persist($film);
+        }
+
+        if ($film->getImageName() == null) {
+            $form = $this->createForm(MovieWithoutPictureType::class, $film);
+        } else {
+            $form = $this->createForm(MovieType::class, $film);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+            $manager->persist($film);
+            $manager->flush();
+
+            return $this->redirectToRoute("fdetail", ["id" => $film->getId()]);
+        }
+
+        return $this->render('prog/create.html.twig', [
+            'formMovie' => $form->createView(),
+            'active_tab' => "",
+            'movie' => $film,
+            'editMode' => $film->getId() !== null,
+            'MovieFileName' => $film->getImageName()
+        ]);
+    }
+
+    /**
+     * @Route("/seance/{id}/edit/{createHor}", name="seance-edit")
+     */
+    public function formSeance(Seance $seance = null, Request $request, $createHor = null)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $manager = $this->getDoctrine()->getManager();
+
+
+        if ($createHor == 1) {
+            $hor = new Horaire;
+            $hor->setSeance($seance);
+            $seance->addHoraire($hor);
+            $manager->persist($hor);
+            $manager->persist($seance);
+        }
+        $form = $this->createForm(SeanceType::class, $seance);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manager->persist($seance);
+            $manager->flush();
+
+            $idf = $seance->getFilm()->getId();
+            if ($form->get('addHoraire')->isClicked()) {
+
+                return $this->redirectToRoute("seance-edit", ['createHor' => 1, 'id' => $seance->getId()]);
+            } else {
+
+                return $this->redirectToRoute('fdetail', ['id' => $idf]);
+            }
+        }
+
+        return $this->render('prog/editSeance.html.twig', [
+            'formSeance' => $form->createView(),
+            'active_tab' => "",
+            'seance' => $seance,
+        ]);
+    }
+
+    /**
+     * @Route("/film/{idf}/newseance", name="seance-create")
+     */
+    public function formCreateSeance(Seance $seance = null, Request $request, $idf)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $manager = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $film = $repo->find($idf);
+
+        $seance = new Seance;
+        $seance->setFilm($film);
+        $seance->setVo(0);
+
+        $hor = new Horaire;
+        $hor->setSeance($seance);
+        $seance->addHoraire($hor);
+
+        $form = $this->createForm(SeanceType::class, $seance);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manager->persist($hor);
+            $manager->persist($seance);
+            $manager->flush();
+
+
+            if ($form->get('addHoraire')->isClicked()) {
+                return $this->redirectToRoute("seance-edit", ['id' => $seance->getId(), "createHor" => 1]);
+            } else {
+                return $this->redirectToRoute('fdetail', ['id' => $idf]);
+            }
+        }
+        return $this->render('prog/editSeance.html.twig', [
+            'formSeance' => $form->createView(),
+            'active_tab' => "",
+            'seance' => $seance,
+        ]);
+    }
+
+
+    /**
+     * @Route("/seance/{id}/remove", name="seance-remove")
+     */
+    public function seanceRemove($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Seance::class);
+        $seance = $repo->find($id);
+        $em->remove($seance);
+        $em->flush();
+        $idFilm = $seance->getfilm()->getId();
+
+        return $this->redirectToRoute('fdetail', ['id' => $idFilm]);
+    }
+
+    /**
+     * @Route("/horaire/{id}/remove", name="horaire-remove")
+     */
+    public function horaireRemove($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Horaire::class);
+        $horaire = $repo->find($id);
+        $em->remove($horaire);
+        $em->flush();
+        $idFilm = $horaire->getSeance()->getfilm()->getId();
+
+        return $this->redirectToRoute('fdetail', ['id' => $idFilm]);
+    }
+
+
     /**
      * @Route("/jour", name="jour")
      */
@@ -210,6 +391,44 @@ class ProgController extends AbstractController
             'active_tab' => ""
         ]);
     }
+    /**
+     * @Route("/film/{id}/supimage", name="movie-picture-remove")
+     */
+    public function pictureRemove($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $movie = $repo->find($id);
+
+        return $this->render('prog/pictureremove.html.twig', [
+            'active_tab' => "",
+            'movie' => $movie
+        ]);
+    }
+
+    /**
+     * @Route("/film/{id}/supimageconf", name="movie-picture-remove-confirm")
+     */
+    public function pictureRemoveConfirm($id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $movie = $repo->find($id);
+        $filename = $movie->getImageName();
+
+        \unlink('../public/images/film/' . $filename);
+
+        $movie->setImageName(null);
+
+        $em->flush();
+
+        return $this->redirectToRoute('movie-edit', [
+            'id' => $movie->getId()
+        ]);
+    }
+
+
     /**
      * @Route("/tarifs", name="tarifs")
      */

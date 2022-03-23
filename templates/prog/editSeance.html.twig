@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('addHoraire') }}
+{% endblock %}
+
+
+{% form_theme formSeance _self %}
+
+
+{% block body %}
+
+	{{form_start(formSeance)}}
+
+	<div class='submitform'>
+		<h3>modification des séances</h3>
+		{# {{dump(formSeance.id.vars.data)}} #}
+		<div class='version'>
+			<div>
+				{# {{form_row(formSeance.id, {'disabled': 'true'})}} #}
+				{{form_row(formSeance.projection )}}
+				{{form_row(formSeance.vo, {'label' : 'VO:'})}}
+			</div>
+			<h4>Modification des horaires :</h4>
+			<ul id="item-fields-list">
+				{%for horaire in formSeance.horaires %}
+
+					{{form_row(horaire.horaire)}}
+
+				{% endfor %}
+				{{form_row(formSeance.addHoraire)}}
+			</ul>
+			{{form_end(formSeance)}}
+
+		</div>
+		<button type="submit" class="btn">
+			Valider !
+		</button>
+	</div>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{# {{ encore_entry_script_tags('addSeance') }} #}
+{% endblock %}
+
+
+{% form_theme formMovie _self %}
+
+
+{% block body %}
+
+
+	<div class='submitform'>
+		<h3>Création ou modification d'un film</h3>
+		{{form_start(formMovie)}}
+
+		{% if MovieFileName %}
+			<p>
+				Image :
+				<img src="{{ absolute_url(asset('images/film/'~movie.imagename)) }}" class="affiche">
+			</p>
+			<a href="{{path('movie-picture-remove',{'id':movie.id} )}}">
+				Supprimer l'image</a>
+
+		{% endif %}
+		{{form_row(formMovie.titre)}}
+
+		{{form_row(formMovie.realisateurs, {'label' : 'Réalisateur.rice.s'})}}
+		{{form_row(formMovie.acteurs)}}
+		{{form_row(formMovie.anneeproduction, {'label' : 'Année de production'})}}
+		{{form_row(formMovie.dateSortie, {'label' : 'Date de Sortie'})}}
+		{{form_row(formMovie.duree, {'label' : 'Durée'})}}
+		{{form_row(formMovie.genrePrincipal)}}
+		{{form_row(formMovie.nationalite)}}
+		{{form_row(formMovie.synopsis)}}
+		{{form_row(formMovie.classification)}}
+		{% if not MovieFileName %}
+			{{form_row(formMovie.imageFile)}}
+		{% endif %}
+		<h4>Informations propres à Allociné</h4>
+		{{form_row(formMovie.affichette)}}
+		{{form_row(formMovie.video)}}
+		{{form_row(formMovie.visaNumber)}}
+		{{form_row(formMovie.idFilm)}}
+		{{form_row(formMovie.affichette250)}}
+		{{form_row(formMovie.videoYT)}}
+		{{form_row(formMovie.videoVimeo, {'attr': {'placeholder' : 'https://vimeo.com/xxxxxxxxxxx'}})}}
+		<button type="submit" class="btn">Enregistrer! Ajouter le film</button>
+		{{form_end(formMovie)}}
+	</div>
+
+{% endblock %}

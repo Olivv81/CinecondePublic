@@ -5,7 +5,11 @@
 
 {% block body %}
 	<div class='undernav'>
+
 		<h2>Films à l'affiche</h2>
+		{% if is_granted('ROLE_USER') %}
+			<a href="{{path('movie-create')}}">Ajouter un nouveau film</a>
+		{% endif %}
 	</div>
 
 	<section class="prog">
