@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class SeanceType extends AbstractType
@@ -19,8 +20,12 @@ class SeanceType extends AbstractType
     {
         $builder
 
-            ->add('projection', TextType::class, [
+            ->add('projection', ChoiceType::class, [
                 'label' => 'Version : ',
+                'choices' => [
+                    '2D' => '2D',
+                    '3D' => '3D',
+                ],
             ])
             ->add('vo', CheckboxType::class, [
                 'label' => 'VO',
@@ -37,7 +42,7 @@ class SeanceType extends AbstractType
             ->add('addHoraire', SubmitType::class, [
                 'label' => 'Enregistrer et ajouter un horaire',
                 'attr' => ['class' => 'btn'],
-            ]);;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

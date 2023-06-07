@@ -2,164 +2,244 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Film;
-use App\Entity\Seance;
 use App\Entity\Horaire;
 use App\Form\MovieType;
 use App\Form\SeanceType;
+use App\Entity\Documents;
 use App\Entity\Evenement;
 use App\Controller\Allocine;
 use App\Form\MovieWithoutPictureType;
+use SebastianBergmann\Timer\Duration;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentToken;
-use Symfony\Component\Validator\Constraints\Length;
+
+
 
 class ProgController extends AbstractController
 {
+    /**
+     * @Route("/sitemap.xml", name="sitemap", defaults={"_format"="xml"})
+     */
+
+    public function sitemap()
+    {
+        $response = new Response(
+            $this->renderView('/sitemap.html.twig')
+        );
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $response;
+    }
+
     /**
      * @Route("/", name="prog")
      */
 
 
-    public function essai(): Response
+    public function essai(ManagerRegistry $doctrine): Response
     {
-        $lesfilms = simplexml_load_file('../allocineseances.xml');
-        $entityManager = $this->getDoctrine()->getManager();
-        $repofilm = $this->getDoctrine()->getRepository(Film::class);
-        $reposeance = $this->getDoctrine()->getRepository(Seance::class);
-        $repohoraire = $this->getDoctrine()->getRepository(Horaire::class);
+
+        $entityManager = $doctrine->getManager();
+        $repofilm = $doctrine->getRepository(Film::class);
+        $repohoraire = $doctrine->getRepository(Horaire::class);
 
 
-        require_once(__DIR__ . '/Allocine.php');
+        function findTrailerInTMDB($titre, $year)
+        {
+            $keyTMDB = "***REMOVED***";
+            $url = 'https://api.themoviedb.org/3/search/movie?api_key=' . $keyTMDB . '&query=' . $titre . '&year=' . $year . '&language=fr-FR&page=1&include_adult=false';
+
+            $encodedUrl = str_replace(" ", "%20", $url);
+            $json = file_get_contents($encodedUrl);
+
+            $movieTMDB = json_decode($json, true);
+
+            if (empty($movieTMDB['results'][0]['id'])) {
+                return null;
+            }
+
+            $MovieIdTMDB = $movieTMDB['results'][0]['id'];
+            $url = "https://api.themoviedb.org/3/movie/{$MovieIdTMDB}/videos?api_key={$keyTMDB}&language=fr-FR";
+
+            $json = file_get_contents($url);
+            $trailerTMDB = json_decode($json, true);
+
+            if (empty($trailerTMDB['results'][0]['key'])) {
+                return null;
+            }
+
+            return $trailerTMDB['results'][0]['key'];
+        }
+        // $titre = 'Don Juan';
+        // // $titreMo = \str_replace(" ", "+", $titre);
+        // findTrailerInTMDB($titre, "2022-05-23");
+
+        // require_once(__DIR__ . '/Allocine.php');
 
         // define('ALLOCINE_PARTNER_KEY', '100ED1DA33EB');
         // define('ALLOCINE_SECRET_KEY', '1a1ed8c1bed24d60ae3472eed1da33eb');
 
 
-
-        function certificate($idfilm)
+        function classification($codeAPI)
         {
-            $allocine = new Allocine();
-            $result = $allocine->get($idfilm);
-            $movie = (json_decode($result, true));
-            $test = empty($movie["movie"]['movieCertificate']['certificate']["$"]);
 
-            if ($test == true) {
-                $certif = "";
-                return $certif;
-            } else {
-                $certif = $movie["movie"]['movieCertificate']['certificate']["$"];
-                echo $certif;
-                return  $certif;
+            $code = preg_replace('/[0-9]/', '', $codeAPI);
+            $age = preg_replace('/[^0-9]/', '', $codeAPI);
+            if ($code == 'ALL') {
+                return 'Tout public';
+            } elseif ($age === "" && $code == 'A') {
+                return 'Avertissement';
+            } elseif ($code == 'A') {
+                return 'Avertissement au moins de ' . $age . ' ans';
+            } elseif ($code == 'R') {
+                return 'Interdiction au moins de ' . $age . ' ans';
             }
-        }
+        };
+
+        // https://movies.monnaie-services.com/doc/fr/prog_api
+        $response = file_get_contents('***REMOVED***');
+        $response = json_decode($response);
+        // visualisation du contenu de l'API :
+        // dd(date('D d-m-Y H:i:s', $response->version), $response);
+
+        $lesfilms = $response->sites[0]->events;
 
 
-        foreach ($lesfilms->xpath('//film') as $filmxml) {
+        foreach ($lesfilms as $filmAPI) {
 
-            $filmexistant = $repofilm->findOneBy(['idFilm' => intval($filmxml['id'])]);
+
+            $filmexistant = $repofilm->findOneBy(['idFilm' => $filmAPI->id]);
+
 
             // echo ($filmexistant . '<br/>');
 
             if (empty($filmexistant)) {
-                // si le film en'existe pas, le créer :
+                // si le film en'existe pas, le créer :             
                 $film = new Film();
-                $film
-                    ->setIdFilm(intval($filmxml['id']))
-                    ->setTitre($filmxml['titre'])
-                    ->setRealisateurs($filmxml['realisateurs'])
-                    ->setActeurs($filmxml['acteurs'])
-                    ->setAnneeproduction(date_create_from_format('Y', $filmxml['anneeproduction']))
-                    ->setDateSortie(date_create_from_format('d/m/Y', $filmxml['datesortie']))
-                    ->setDuree(date_create_from_format('H\hi', $filmxml['duree']))
-                    ->setGenrePrincipal($filmxml['genreprincipal'])
-                    ->setNationalite($filmxml['nationalite'])
-                    ->setSynopsis($filmxml['synopsis'])
-                    ->setAffichette($filmxml['affichette'])
-                    ->setAffichette250(str_replace(".fr/", ".fr/r_300_x", $filmxml['affichette']))
-                    ->setVideo($filmxml['video'])
-                    ->setVisaNumber(intval($filmxml['visanumber']))
-                    ->setClassification(certificate(intval($filmxml['id'])));
+                // préparation de la syntaxe pour le query de l'API TMDB
+                $titre = $filmAPI->title;
+                $year = (DateTime::createFromFormat('Ymd', $filmAPI->release_date))->format('Y');
+                $videoYT = findTrailerInTMDB($titre, $year);
 
-                $entityManager->persist($film);
-                $entityManager->flush();
+                if (isset($filmAPI->actors)) {
+                    $film->setActeurs($filmAPI->actors);
+                }
+
+                if (isset($filmAPI->country)) {
+                    $film->setNationalite(locale_get_display_region('-' . $filmAPI->country, 'fr-FR'));
+                }
+                if (isset($filmAPI->certification_id)) {
+                    $film->setClassification(classification($filmAPI->certification_id));
+                }
+
+                $film
+                    ->setIdFilm($filmAPI->id)
+                    ->setTitre($filmAPI->title)
+                    ->setRealisateurs($filmAPI->director)
+                    ->setDateSortie(DateTime::createFromFormat('Ymd', $filmAPI->release_date))
+                    ->setDuree($filmAPI->duration)
+                    ->setGenrePrincipal($filmAPI->localized_genres)
+                    ->setSynopsis($filmAPI->synopsis)
+                    ->setAffichette(str_replace("/120/", "/600/", $filmAPI->bill_url))
+                    ->setVideoYT($videoYT)
+                    ->setAffichette250(str_replace("/120/", "/320/", $filmAPI->bill_url));
+                // dd((date_format(date_create_from_format('d/m/Y', $filmxml['datesortie']), "Y")));
+
+                // $entityManager->persist($film);
+                // $entityManager->flush();
             } else {
                 $film = $filmexistant;
             }
 
             $IDfilm = $film->getId();
 
-            foreach ($filmxml->horaire as $seancexml) {
-                $projection = strval($seancexml['projection']);
-                $VO = strval($seancexml['vo']);
-
-                $seanceexistante = $this->getDoctrine()->getRepository(Seance::class)->findOneBy([
-                    'projection' => $projection,
-                    'vo' => $VO,
-                    'film' => $IDfilm
-                ]);
-
+            foreach ($filmAPI->sessions as $seanceAPI) {
+                $IdApi = $seanceAPI->id;
+                $seanceexistante = $doctrine->getRepository(Horaire::class)->findOneBy(['IdEMS' => $IdApi,]);
 
                 if (empty($seanceexistante)) {
-                    $seance = new Seance();
 
+                    $horaire = new Horaire();
 
-                    $seance
-                        ->setVo(boolval(intval($seancexml['vo'])))
-                        ->setVersion($seancexml['version'])
-                        ->setProjection($seancexml['projection'])
-                        ->setSoustitre($seancexml['soustitre'])
-                        ->setFilm($film);
-                    $film->addSeance($seance);
-                    $entityManager->persist($seance);
+                    if (in_array("vo", $seanceAPI->features)) {
+                        $horaire->setVo(1);
+                    } else {
+                        $horaire->setVo(0);
+                    }
+
+                    if (in_array("video_3d", $seanceAPI->features)) {
+                        $horaire->setTroisD(1);
+                    } else {
+                        $horaire->setTroisD(0);
+                    }
+
+                    $horaire
+                        ->setHoraire(DateTime::createFromFormat('YmdHi', $seanceAPI->date))
+                        ->setFilm($film)
+                        ->setALAffiche(true)
+                        ->setIdEMS($IdApi);
+
+                    $film->addHoraire($horaire);
+                    $entityManager->persist($horaire);
+                    $entityManager->persist($film);
                     $entityManager->flush();
-                } else {
-                    $seance = $seanceexistante;
                 }
 
-                $horairexml = explode(";", $seancexml);
-                for ($line = 0; $line < count($horairexml); $line++) {
-                    $horaireexistant = $repohoraire->FindOneBy([
-                        'horaire' => (date_create_from_format('d-m-Y H:i:s', $horairexml[$line]))
-                    ]);
-                    if (empty($horaireexistant)) {
+                if ($seanceexistante) {
 
-                        $horaire = new Horaire();
-                        $horaire
-                            ->setHoraire(date_create_from_format('d-m-Y H:i:s', $horairexml[$line]))
-                            ->setSeance($seance);
-                        $seance->addHoraire($horaire);
-                        $entityManager->persist($horaire);
-                        $entityManager->flush();
+                    if (in_array("vo", $seanceAPI->features)) {
+                        $seanceexistante->setVo(1);
+                    } else {
+                        $seanceexistante->setVo(0);
                     }
+
+                    if (in_array("video_3d", $seanceAPI->features)) {
+                        $seanceexistante->setTroisD(1);
+                    } else {
+                        $seanceexistante->setTroisD(0);
+                    }
+
+                    $seanceexistante
+                        ->setHoraire(DateTime::createFromFormat('YmdHi', $seanceAPI->date))
+                        ->setFilm($film)
+                        ->setALAffiche(true)
+                        ->setIdEMS($IdApi);
+
+                    $film->addHoraire($seanceexistante);
+                    $entityManager->persist($seanceexistante);
+                    $entityManager->persist($film);
+                    $entityManager->flush();
                 }
             }
-
-
             $entityManager->flush();
         };
 
 
+
         $today = new \DateTime("now");
 
-        $hor = $this->getDoctrine()->getRepository(Horaire::class)->FilmByOneHoraire($today);
-        // $hor = $this->getDoctrine()->getRepository(Film::class)->getAfterToday($today);
+        $hor = $doctrine->getRepository(Horaire::class)->FilmByOneHoraire($today);
+
         // dd($hor[1]->getSeance()->getId());
 
 
         $movieTab = [];
         $nbHor = count($hor);
         for ($i = 0; $i < $nbHor; $i = $i + 1) {
-            $film = $hor[$i]->getSeance()->getfilm()->getId();
+            $film = $hor[$i]->getFilm()->getId();
 
-            // dump("idh=" . $hor[$i]->getId() . " idf=" . $hor[$i]->getSeance()->getfilm()->getId());
+
 
             if (in_array($film, $movieTab)) {
-                // dump("horsup" . $hor[$i]->getId());
+
                 unset($hor[$i]);
             } else {
                 array_push($movieTab, $film);
@@ -178,11 +258,11 @@ class ProgController extends AbstractController
     /**
      * @Route("/removall", name="removall")
      */
-    public function removeallmovies()
+    public function removeallmovies(ManagerRegistry $doctrine)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $manager = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $manager = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Film::class);
         $movies = $repo->findAll();
         foreach ($movies as $movies) {
             $firstmovie = $repo->findOneBy([]);
@@ -199,13 +279,21 @@ class ProgController extends AbstractController
      * @Route("/fdetail/{id}", name="fdetail")
      */
 
-    public function FDetail($id)
+    public function FDetail(ManagerRegistry $doctrine, $id)
     {
-        $today = new \DateTime("now");
-        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $today = new \DateTime('midnight');
+
+        $repo = $doctrine->getRepository(Film::class);
         $film = $repo->find($id);
-        $horaires = $this->getDoctrine()->getRepository(Horaire::class)->schedulebymovie($film, $today);
-        // $horaires = $this->getDoctrine()->getRepository(Horaire::class)->FilmDetail($id);;
+
+        if (!$film) {
+            return $this->redirectToRoute("prog");
+        }
+
+        $horaires = $doctrine->getRepository(Horaire::class)->schedulebymovie($film, $today);
+
+
+
 
         return $this->render('prog/fdetail.html.twig', [
             'film' => $film,
@@ -219,15 +307,15 @@ class ProgController extends AbstractController
      * @Route("/film/new", name="movie-create")
      * @Route("/film/{id}/edit", name="movie-edit")
      */
-    public function form(Film $film = null, Request $request)
+    public function form(ManagerRegistry $doctrine, Film $film = null, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $manager = $this->getDoctrine()->getManager();
+        $manager = $doctrine->getManager();
 
         if (!$film) {
             $film = new Film();
-            $manager->persist($film);
+            // $manager->persist($film);
         }
 
         if ($film->getImageName() == null) {
@@ -243,7 +331,6 @@ class ProgController extends AbstractController
 
             $manager->persist($film);
             $manager->flush();
-
             return $this->redirectToRoute("fdetail", ["id" => $film->getId()]);
         }
 
@@ -259,12 +346,11 @@ class ProgController extends AbstractController
     /**
      * @Route("/seance/{id}/edit/{createHor}", name="seance-edit")
      */
-    public function formSeance(Seance $seance = null, Request $request, $createHor = null)
+    public function formSeance(ManagerRegistry $doctrine, Seance $seance = null, Request $request, $createHor = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $manager = $this->getDoctrine()->getManager();
-
+        $manager = $doctrine->getManager();
 
         if ($createHor == 1) {
             $hor = new Horaire;
@@ -277,16 +363,17 @@ class ProgController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($seance->getHoraires() as $horaire) {
+                $horaire->setALAffiche(true);
+            }
 
             $manager->persist($seance);
             $manager->flush();
 
             $idf = $seance->getFilm()->getId();
             if ($form->get('addHoraire')->isClicked()) {
-
                 return $this->redirectToRoute("seance-edit", ['createHor' => 1, 'id' => $seance->getId()]);
             } else {
-
                 return $this->redirectToRoute('fdetail', ['id' => $idf]);
             }
         }
@@ -301,11 +388,11 @@ class ProgController extends AbstractController
     /**
      * @Route("/film/{idf}/newseance", name="seance-create")
      */
-    public function formCreateSeance(Seance $seance = null, Request $request, $idf)
+    public function formCreateSeance(ManagerRegistry $doctrine, Seance $seance = null, Request $request, $idf)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $manager = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $manager = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Film::class);
         $film = $repo->find($idf);
 
         $seance = new Seance;
@@ -321,7 +408,9 @@ class ProgController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            foreach ($seance->getHoraires() as $horaire) {
+                $horaire->setALAffiche(true);
+            }
             $manager->persist($hor);
             $manager->persist($seance);
             $manager->flush();
@@ -342,47 +431,31 @@ class ProgController extends AbstractController
 
 
     /**
-     * @Route("/seance/{id}/remove", name="seance-remove")
-     */
-    public function seanceRemove($id)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Seance::class);
-        $seance = $repo->find($id);
-        $em->remove($seance);
-        $em->flush();
-        $idFilm = $seance->getfilm()->getId();
-
-        return $this->redirectToRoute('fdetail', ['id' => $idFilm]);
-    }
-
-    /**
      * @Route("/horaire/{id}/remove", name="horaire-remove")
      */
-    public function horaireRemove($id)
+    public function horaireRemove(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Horaire::class);
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Horaire::class);
         $horaire = $repo->find($id);
         $em->remove($horaire);
         $em->flush();
-        $idFilm = $horaire->getSeance()->getfilm()->getId();
 
-        return $this->redirectToRoute('fdetail', ['id' => $idFilm]);
+
+        return $this->redirectToRoute('prog');
     }
 
 
     /**
      * @Route("/jour", name="jour")
      */
-    public function dayFilter(Request $request)
+    public function dayFilter(ManagerRegistry $doctrine, Request $request)
     {
         $jour = $request->get('jour');
 
-        $movie = $this->getDoctrine()->getRepository(Horaire::class)->movieByDay($jour);
-        $event = $this->getDoctrine()->getRepository(Evenement::class)->eventByDay($jour);
+        $movie = $doctrine->getRepository(Horaire::class)->movieByDay($jour);
+        $event = $doctrine->getRepository(Evenement::class)->eventByDay($jour);
 
 
         return $this->render('prog/jour.html.twig', [
@@ -394,10 +467,10 @@ class ProgController extends AbstractController
     /**
      * @Route("/film/{id}/supimage", name="movie-picture-remove")
      */
-    public function pictureRemove($id)
+    public function pictureRemove(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $repo = $doctrine->getRepository(Film::class);
         $movie = $repo->find($id);
 
         return $this->render('prog/pictureremove.html.twig', [
@@ -409,11 +482,11 @@ class ProgController extends AbstractController
     /**
      * @Route("/film/{id}/supimageconf", name="movie-picture-remove-confirm")
      */
-    public function pictureRemoveConfirm($id)
+    public function pictureRemoveConfirm(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Film::class);
         $movie = $repo->find($id);
         $filename = $movie->getImageName();
 
@@ -447,24 +520,8 @@ class ProgController extends AbstractController
             'active_tab' => "aboutus",
         ]);
     }
-    /**
-     * @Route("/download/{file}", name="download")
-     */
-    public function download($file)
-    {
-        switch ($file) {
-            case "affichette":
-                $filePath = '../affichette.pdf';
-                break;
-            case "programme":
-                $filePath = '../prog.pdf';
-                break;
-        }
 
 
-        $response = new BinaryFileResponse($filePath);
-        return $response;
-    }
     /**
      * @Route("/mentions-legales", name="mentions-legales")
      */
@@ -478,11 +535,11 @@ class ProgController extends AbstractController
     /**
      * @Route("/film/{id}/sup", name="movie-remove")
      */
-    public function movieRemove($id)
+    public function movieRemove(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Film::class);
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Film::class);
         $movie = $repo->find($id);
         $em->remove($movie);
         $em->flush();

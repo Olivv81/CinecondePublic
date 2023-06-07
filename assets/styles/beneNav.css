@@ -1,0 +1,214 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+.menu {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 5px;
+    background-color: white;
+    margin: 5px 5px 5px 0px;
+    padding: 5px;
+    font-family: Raleway;
+}
+
+/* .menu>img {
+    width: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: contain;
+} */
+
+.iconOpen {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    z-index: 3;
+}
+
+#menuAdmin {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: fixed;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    right: 0;
+    top: 0px;
+    z-index: 4;
+    background-color: var(--color1);
+    padding: 0 35px 35px 35px;
+    -webkit-transform: translate(100%);
+    -ms-transform: translate(100%);
+    transform: translate(100%);
+    -webkit-transition: -webkit-transform 0.5s ease-in;
+    transition: -webkit-transform 0.5s ease-in;
+    -o-transition: transform 0.5s ease-in;
+    transition: transform 0.5s ease-in;
+    transition: transform 0.5s ease-in, -webkit-transform 0.5s ease-in;
+}
+
+/* #menuAdmin:target {
+    -webkit-transform: translate(0%);
+    -ms-transform: translate(0%);
+    transform: translate(0%);
+    -webkit-transition: -webkit-transform 0.5s ease-out;
+    transition: -webkit-transform 0.5s ease-out;
+    -o-transition: transform 0.5s ease-out;
+    transition: transform 0.5s ease-out;
+    transition: transform 0.5s ease-out, -webkit-transform 0.5s ease-out;
+} */
+
+.iconClose {
+    -ms-flex-item-align: inherit;
+    -ms-grid-row-align: inherit;
+    align-self: inherit;
+    margin: 0 0 0 -30px;
+}
+
+.onglet {
+    color: black;
+    padding: 10px 5px;
+    font-family: Raleway;
+    font-size: 1 rem;
+    font-weight: 400;
+    -ms-flex-item-align: end;
+    align-self: flex-end;
+    width: 100%;
+    border-bottom: 1px solid black;
+    text-decoration: none;
+}
+
+.onglet:hover {
+    color: var(--color4);
+
+}
+
+.onglet:active {
+    color: yellowgreen
+}
+
+
+.menu:hover {
+    background-color: var(--color2);
+}
+
+.menuactive {
+    background-color: var(--color2);
+}
+
+.underHeader {
+    background-color: var(--color4);
+    position: sticky;
+    top: 0;
+}
+
+.navMenu {
+    margin: 0px auto 0px auto;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: space-evenly;
+    -ms-flex-pack: space-evenly;
+    justify-content: space-evenly;
+    height: 30px;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+    padding: 5px 0 0 0;
+    font-family: Raleway;
+}
+
+.navMenuResponsive {
+    display: none;
+}
+
+.navMenu a {
+    width: auto;
+    margin: 0 10px 0 10px;
+    color: var(--color1);
+    text-decoration: none;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-bottom: 0px solid var(--color3);
+    -webkit-transition: border-bottom 0.1s linear 0.5s;
+    -o-transition: border-bottom 0.1s linear 0.5s;
+    transition: border-bottom 0.1s linear 0.5s;
+}
+
+.navMenu a:hover {
+    color: var(--color3);
+    border-bottom: 2px solid var(--color3);
+
+}
+
+.active {
+    color: var(--color3) !important;
+    border-bottom: 2px solid var(--color3) !important;
+    -webkit-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+}
+
+@media screen and (max-width: 755px) {
+    .navMenu {
+        display: none;
+    }
+
+    .navMenuResponsive {
+        position: fixed;
+        bottom: 15px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        width: 70%;
+        left: 15%;
+        background-color: var(--color4);
+        padding: 5px;
+        -ms-flex-pack: distribute;
+        justify-content: space-around;
+        border-radius: 25px;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    }
+
+    .iconNav {
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        padding: 5px;
+    }
+
+    .iconNav>img {
+        width: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        -o-object-fit: contain;
+        object-fit: contain;
+    }
+
+    .iconNav:hover {
+        background-color: var(--color2);
+    }
+
+    .iconNav:active {
+        background-color: var(--color2);
+    }
+}

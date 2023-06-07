@@ -1,0 +1,23 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% form_theme formUser _self %}
+
+{% block body %}
+	<div class='undernav'>
+		<h2>Profil de la ou du bénévole</h2>
+	</div>
+	<section>
+		<div class='form'>
+			{{form_start(formUser)}}
+			{{form_rest(formUser)}}
+			<button type="submit" class="btn">
+				{% if editMode %}
+					Enregistrer !
+				{% else %}
+					Créer !
+				{% endif %}
+			</button>
+			{{form_end(formUser)}}
+		</div>
+	</section>
+{% endblock %}

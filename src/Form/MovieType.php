@@ -22,9 +22,11 @@ class MovieType extends AbstractType
             ->add('acteurs')
             ->add('anneeproduction', DateTimeType::class, [
                 'widget' => 'single_text',
+                'required' => \false,
             ])
             ->add('dateSortie', DateTimeType::class, [
                 'widget' => 'single_text',
+                'required' => \false,
             ])
             ->add('duree', TimeType::class, [
                 'widget' => 'single_text'

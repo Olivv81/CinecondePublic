@@ -1,0 +1,41 @@
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+{% block stylesheets %}
+
+	{{ encore_entry_link_tags('beneApp') }}
+
+
+{% endblock %}
+{% block javascripts %}
+
+
+	{{ encore_entry_script_tags('beneApp') }}
+
+{% endblock %}
+
+{% block body %}
+	<section>
+		<article class="password">
+			{% for flash_error in app.flashes('reset_password_error') %}
+				<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+			{% endfor %}
+			<h3>Réinitialisation de votre mot de passe</h3>
+
+
+			{{ form_start(requestForm) }}
+			{{ form_row(requestForm.email) }}
+			<div>
+				<small>
+					Entrez votre adresse mail qui vous sert habituellement à vous connecter sur notre site.
+				</small>
+			</div>
+
+			<button class="btn btn-primary">m'envoyer un mail pour recréer mon mot de passe.</button>
+			{{ form_end(requestForm) }}
+		</article>
+
+	</section>
+
+{% endblock %}

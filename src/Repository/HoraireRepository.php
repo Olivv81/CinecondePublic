@@ -22,19 +22,19 @@ class HoraireRepository extends ServiceEntityRepository
     // /**
     //  * @return Horaire[] Returns an array of Horaire objects
     //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('h')
-            ->andWhere('h.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('h.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+
+    // public function findByUser($user)
+    // {
+    //     $query = $this->createQueryBuilder('h')
+    //         ->select('h')
+    //         ->having('h.accueil = :user')
+    //         ->setParameter('user', $user)
+    //         ->orderBy('h.horaire', 'ASC')
+    //         ->getQuery()
+    //         ->getResult();
+    //     return $query;
+    // }
+
 
     /*
     public function findOneBySomeField($value): ?Horaire
@@ -54,13 +54,9 @@ class HoraireRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('h')
             ->Select('h')
             ->Where('h.horaire >= :today')
-            ->setParameter('today', $today->Format('Y-m-d H:i:s'))
+            ->setParameter('today', $today->format("Y-m-d") . " 00:00:00")
             ->orderBy('h.horaire', 'ASC')
-
-            ->Join('h.seance', 's')
-            ->Join('s.film', 'f')
-
-
+            ->Join('h.Film', 'f')
 
             ->getQuery()
             ->getResult();
@@ -74,8 +70,7 @@ class HoraireRepository extends ServiceEntityRepository
 
             ->select('h')
             ->where('f.id=:film')
-            ->Join('h.seance', 's')
-            ->Join('s.film', 'f')
+            ->Join('h.Film', 'f')
             ->setParameter('film', $film)
             ->getQuery()
             ->getResult();
@@ -95,8 +90,7 @@ class HoraireRepository extends ServiceEntityRepository
             ->andWhere('h.horaire <:to')
             ->setParameter('from', $date->format("Y-m-d") . " 00:00:00")
             ->setParameter('to', $date->format("Y-m-d") . " 23:59:00")
-            ->Join('h.seance', 's')
-            ->Join('s.film', 'f')
+            ->Join('h.Film', 'f')
             ->groupBy('f.titre')
             ->orderBy('h.horaire', 'ASC')
             ->getQuery()
@@ -107,15 +101,27 @@ class HoraireRepository extends ServiceEntityRepository
 
     public function schedulebymovie($film, $today)
     {
-
         $query = $this->createQueryBuilder('h')
             ->select('h')
             ->Where('h.horaire >= :today')
             ->andWhere('f.id = :film')
             ->setParameter('today', $today->Format('Y-m-d H:i:s'))
             ->setParameter('film', $film)
-            ->Join('h.seance', 's')
-            ->Join('s.film', 'f')
+            ->Join('h.Film', 'f')
+            ->orderBy('h.horaire', 'ASC')
+            ->getQuery()
+            ->getResult();
+        return $query;
+    }
+
+    public function HoraireAfterToday()
+    {
+        $date = new \DateTime("now");
+        $query = $this->createQueryBuilder('h')
+
+            ->select('h')
+            ->Where('h.horaire >= :today')
+            ->setParameter('today', $date->format("Y-m-d") . " 00:00:00")
             ->orderBy('h.horaire', 'ASC')
             ->getQuery()
             ->getResult();

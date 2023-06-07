@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\HoraireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,25 +25,56 @@ class Horaire
     private $horaire;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="array", nullable=true)
      */
-    private $agentAccueil;
+    private $accueil = [];
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $Projection = [];
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true, options={"default":"true"})
+     */
+    private $aLAffiche;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true )
+     */
+    private $typeSeance;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $projectionniste;
+    private $IdEMS;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $autre;
+    private $TroisD;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Seance::class, inversedBy="horaires")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="boolean", nullable=true)
      */
-    private $seance;
+    private $VO;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Film::class, inversedBy="horaires")
+     */
+    private $Film;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $inscriptionAccueil;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $inscriptionProjection;
+
+
 
     public function getId(): ?int
     {
@@ -67,57 +100,124 @@ class Horaire
         return $this;
     }
 
-    public function getAgentAccueil(): ?string
+
+    public function getAccueil(): ?array
     {
-        return $this->agentAccueil;
+        return $this->accueil;
     }
 
-    public function setAgentAccueil(?string $agentAccueil): self
+    public function setAccueil(?array $accueil): self
     {
-        $this->agentAccueil = $agentAccueil;
+        $this->accueil = $accueil;
 
         return $this;
     }
 
-    public function getProjectionniste(): ?string
+    public function getProjection(): ?array
     {
-        return $this->projectionniste;
+        return $this->Projection;
     }
 
-    public function setProjectionniste(?string $projectionniste): self
+    public function setProjection(?array $Projection): self
     {
-        $this->projectionniste = $projectionniste;
+        $this->Projection = $Projection;
 
         return $this;
     }
 
-    public function getAutre(): ?string
+    public function getALAffiche(): ?bool
     {
-        return $this->autre;
+        return $this->aLAffiche;
     }
 
-    public function setAutre(?string $autre): self
+    public function setALAffiche(?bool $aLAffiche): self
     {
-        $this->autre = $autre;
+        $this->aLAffiche = $aLAffiche;
 
         return $this;
     }
 
-    public function getSeance(): ?seance
+    public function getTypeSeance(): ?string
     {
-        return $this->seance;
+        return $this->typeSeance;
     }
 
-    public function setSeance(?seance $seance): self
+    public function setTypeSeance(?string $typeSeance): self
     {
-        $this->seance = $seance;
+        $this->typeSeance = $typeSeance;
 
         return $this;
     }
-    public function addSeance(seance $seance): void
+
+    public function getIdEMS(): ?string
     {
-        if (!$this->seances->contains($seance)) {
-            $this->seances->add($seance);
-        }
+        return $this->IdEMS;
+    }
+
+    public function setIdEMS(?string $IdEMS): self
+    {
+        $this->IdEMS = $IdEMS;
+
+        return $this;
+    }
+
+    public function isTroisD(): ?bool
+    {
+        return $this->TroisD;
+    }
+
+    public function setTroisD(?bool $TroisD): self
+    {
+        $this->TroisD = $TroisD;
+
+        return $this;
+    }
+
+    public function isVO(): ?bool
+    {
+        return $this->VO;
+    }
+
+    public function setVO(?bool $VO): self
+    {
+        $this->VO = $VO;
+
+        return $this;
+    }
+
+    public function getFilm(): ?Film
+    {
+        return $this->Film;
+    }
+
+    public function setFilm(?Film $Film): self
+    {
+        $this->Film = $Film;
+
+        return $this;
+    }
+
+    public function isInscriptionAccueil(): ?bool
+    {
+        return $this->inscriptionAccueil;
+    }
+
+    public function setInscriptionAccueil(?bool $inscriptionAccueil): self
+    {
+        $this->inscriptionAccueil = $inscriptionAccueil;
+
+        return $this;
+    }
+
+    public function isInscriptionProjection(): ?bool
+    {
+        return $this->inscriptionProjection;
+    }
+
+    public function setInscriptionProjection(?bool $inscriptionProjection): self
+    {
+        $this->inscriptionProjection = $inscriptionProjection;
+
+        return $this;
     }
 }

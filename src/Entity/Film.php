@@ -36,7 +36,7 @@ class Film
     /**
      * @var string
      *
-     * @ORM\Column(name="realisateurs", type="string", length=255, nullable=false)
+     * @ORM\Column(name="realisateurs", type="string", length=255, nullable=true)
      */
     private $realisateurs;
 
@@ -62,9 +62,9 @@ class Film
     private $dateSortie;
 
     /**
-     * @var \DateTime|null
+     * @var int|null
      *
-     * @ORM\Column(name="duree", type="time", nullable=true)
+     * @ORM\Column(name="duree", type="integer", nullable=true)
      */
     private $duree;
 
@@ -110,13 +110,9 @@ class Film
      */
     private $visaNumber;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Seance::class, mappedBy="film", orphanRemoval=true)
-     */
-    private $seances;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $idFilm;
 
@@ -141,8 +137,8 @@ class Film
 
     public function __construct()
     {
-        $this->seances = new ArrayCollection();
         $this->evenements = new ArrayCollection();
+        $this->horaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,12 +212,12 @@ class Film
         return $this;
     }
 
-    public function getDuree(): ?\DateTimeInterface
+    public function getDuree(): ?int
     {
         return $this->duree;
     }
 
-    public function setDuree(?\DateTimeInterface $duree): self
+    public function setDuree(?int $duree): self
     {
         $this->duree = $duree;
 
@@ -300,44 +296,13 @@ class Film
         return $this;
     }
 
-    /**
-     * @return Collection|Seance[]
-     */
-    public function getSeances(): Collection
-    {
-        return $this->seances;
-    }
 
-    public function addSeance(Seance $seance): self
-    {
-        if (!$this->seances->contains($seance)) {
-            $this->seances[] = $seance;
-            $seance->setFilm($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSeance(Seance $seance): self
-    {
-        $this->seances->removeElement($seance);
-
-        if ($this->seances->removeElement($seance)) {
-            // set the owning side to null (unless already changed)
-            if ($seance->getFilm() === $this) {
-                $seance->setFilm(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getIdFilm(): ?int
+    public function getIdFilm(): ?string
     {
         return $this->idFilm;
     }
 
-    public function setIdFilm(int $idFilm): self
+    public function setIdFilm(string $idFilm): self
     {
         $this->idFilm = $idFilm;
 
@@ -436,6 +401,16 @@ class Film
     private $videoVimeo;
 
     /**
+     * @ORM\Column(type="binary", nullable=true)
+     */
+    private $selection;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Horaire::class, mappedBy="Film", orphanRemoval=true)
+     */
+    private $horaires;
+
+    /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
      * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
@@ -500,6 +475,48 @@ class Film
     public function setVideoVimeo(?string $videoVimeo): self
     {
         $this->videoVimeo = $videoVimeo;
+
+        return $this;
+    }
+
+    public function getSelection()
+    {
+        return $this->selection;
+    }
+
+    public function setSelection($selection): self
+    {
+        $this->selection = $selection;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Horaire>
+     */
+    public function getHoraires(): Collection
+    {
+        return $this->horaires;
+    }
+
+    public function addHoraire(Horaire $horaire): self
+    {
+        if (!$this->horaires->contains($horaire)) {
+            $this->horaires[] = $horaire;
+            $horaire->setFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHoraire(Horaire $horaire): self
+    {
+        if ($this->horaires->removeElement($horaire)) {
+            // set the owning side to null (unless already changed)
+            if ($horaire->getFilm() === $this) {
+                $horaire->setFilm(null);
+            }
+        }
 
         return $this;
     }

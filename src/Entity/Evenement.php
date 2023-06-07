@@ -4,16 +4,14 @@ namespace App\Entity;
 
 use App\Entity\Film;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\EvenementRepository;
 use Doctrine\Common\Collections\Collection;
 use Symfony\component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\component\HttpFoundation\File\UploadedFile;
 
 /**
- * @ORM\Entity(repositoryClass=EvenementRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\EvenementRepository"))
  * @vich\Uploadable
  */
 class Evenement
@@ -90,6 +88,11 @@ class Evenement
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $videoVimeo;
+
+    /**
+     * @ORM\Column(type="binary", nullable=true)
+     */
+    private $selection;
 
     public function __construct()
     {
@@ -268,6 +271,18 @@ class Evenement
     public function setVideoVimeo(?string $videoVimeo): self
     {
         $this->videoVimeo = $videoVimeo;
+
+        return $this;
+    }
+
+    public function getSelection()
+    {
+        return $this->selection;
+    }
+
+    public function setSelection($selection): self
+    {
+        $this->selection = $selection;
 
         return $this;
     }

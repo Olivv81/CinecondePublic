@@ -1,0 +1,136 @@
+{% apply inky_to_html |inline_css(source('@styles/foundation-emails.css')) %}
+
+<style>
+	p.white {
+		font-size: 1.2rem;
+		color: white;
+		font-weight: 100;
+	}
+	h2 {
+		font-size: 30px;
+		margin: 0 0 0 5px;
+		padding: 0;
+		color: white;
+		font-weight: 100;
+	}
+</style>
+
+<container>
+	<wrapper class="header" bgcolor="#7A6C49">
+		<row>
+			<columns small="4">
+				<img src="https://cineconde.fr/images/logocinecondeblanc.png" alt="Logo!" height="60">
+			</columns>
+			<columns small="8">
+				<p class="text-right white">Newsletter du
+					{{ "now"|date("m/d/Y") }}
+				</p>
+			</columns>
+		</row>
+	</wrapper>
+	<center>
+		<h1 class "text-center">{{titre}}</h1>
+	</center>
+
+	{% if messagebox %}
+		<row>
+			<p>{{messagebox|nl2br}}</p>
+		</row>
+	{% endif %}
+
+	{% if docs %}
+		<row>
+			<columns>
+				<button class="rounded" href="https://cineconde.fr/download/affichette">Télécharger l'affichette</button>
+			</columns>
+			<columns>
+				<button class="rounded" href="https://cineconde.fr/download/programme">Télécharger le programme</button>
+			</columns>
+		</row>
+	{% endif %}
+
+	{% if evenements and eventList %}
+		<wrapper class="header" bgcolor="#7A6C49">
+			<row>
+				<h2>Les rendez-vous à ne pas manquer :</h2>
+			</row>
+		</wrapper>
+		{% for event in evenements %}
+			<row>
+				<h3 class="margin">{{event.titre|nl2br}}</h3>
+				<columns>
+					<img src={{ "https://www.cineconde.fr/images/event/#{event.imagename}"}} class="affiche" alt="visuel de l'évènement">
+				</columns>
+				<columns>
+					<p>{{event.date|format_datetime('full', 'none', locale='fr')}}
+						{% if event.date|date("Hi") != "0000" %}
+							à
+							{{event.date|format_datetime('none', 'short', locale='fr')}}
+						{% endif %}
+						{% if event.dateFin != null %}
+							au
+							{{event.dateFin|format_datetime('full', 'none', locale='fr')}}
+						{% endif %}
+					</p>
+					<p>
+						{{event.description|nl2br}}
+					</p>
+					<p>
+						Tarif(s) :{{event.tarifs|nl2br}}
+					</p>
+					<button class="rounded" href={{"https://www.cineconde.fr/evdetail/#{event.id}"}}>En savoir plus...</button>
+				</columns>
+			</row>
+		{% endfor %}
+
+	{% endif %}
+
+	<spacer size="10"></spacer>
+	{% if movieList %}
+		<row>
+			<wrapper class="header" bgcolor="#7A6C49">
+				<row>
+					<h2>Les films à l'affiche</h2>
+				</row>
+			</wrapper>
+			{% for movie in films_aftertoday %}
+				<row>
+					<h3>{{movie.titre}}</h3>
+					<columns small="4">
+						<img src="{{movie.affichette250}}" class="affiche" alt="affiche du film">
+
+					</columns>
+					<columns small="8">
+						<ul>
+							<li>De
+								{{movie.realisateurs}}</li>
+							<li>{{movie.nationalite}}
+								-
+								{{movie.anneeproduction | date('Y')}}
+								-
+								{{movie.duree|date('H\\hi')}}</li>
+							{% if movie.acteurs %}
+								<li>Avec
+									{{movie.acteurs}}</li>
+							{% endif %}
+							{% if movie.genreprincipal %}
+								<li>Genre :
+									{{movie.genreprincipal}}</li>
+							{% endif %}
+						</ul>
+						<p>
+							{{movie.synopsis}}
+						</p>
+						{% if movie.classification %}
+							<p>{{movie.classification}}</p>
+						{% endif %}
+
+						<button class="rounded" href={{"https://www.cineconde.fr/fdetail/#{movie.id}"}}>En savoir plus...</button>
+					</columns>
+				</row>
+
+			{% endfor %}
+		</row>
+	{% endif %}
+</container>
+{% endapply %}

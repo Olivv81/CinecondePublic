@@ -1,0 +1,115 @@
+{% extends "basebenevole.html.twig" %}
+{% block body %}
+
+	<section class="home" tab="home">
+		<div class="bonjour">Bonjour
+			{{app.user.prenom}}
+			<br>
+			Statut :
+			{% if is_granted('ROLE_ADMIN') %}Administrateur
+			{% else %}
+				Utilisateur
+			{% endif %}
+			<br>
+			Commission :
+			{% if app.user.accueil == 1 %}
+				Accueil
+			{% endif %}
+			{% if app.user.projection == 1 %}
+				Projection
+			{% endif %}
+
+		</div>
+
+
+		<div class='commission'>
+			{% if mesSeancesAccueil != null %}
+				<div class='tuile'>
+					<h2>Mes séances à l'accueil:</h2>
+					{% for Seance in mesSeancesAccueil %}
+						<div>
+							{% if Seance.Film is defined %}
+								<strong>{{Seance.Film.titre}}</strong>
+							{% else %}
+								<strong>{{Seance.typeSeance}}</strong>
+
+							{% endif %}
+							<br>
+							{{Seance.horaire|format_datetime('full', 'short', locale='fr')}}
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			{% if seanceAccueilPourvoir != null and app.user.accueil == true %}
+				<div class='tuile'>
+					<h2>La prochaine séance à l'accueil à pourvoir est:</h2>
+					<div>
+						<strong>{{seanceAccueilPourvoir.horaire|format_datetime('full', 'short', locale='fr')}}</strong>
+						pour
+						{% if seanceAccueilPourvoir.Film.titre is defined %}
+							{{seanceAccueilPourvoir.Film.titre}}
+						{% else %}
+							{{seanceAccueilPourvoir.typeSeance}}
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+
+			{% if app.user.accueil == true %}
+				<div class='tuile'>
+					<h2>Nb de places à l'accueil à pourvoir:</h2>
+					<div class="bigNumber">
+						{{nbPlaceAccueil}}
+					</div>
+				</div>
+			{% endif %}
+
+		</div>
+
+		<div class="commission">
+			{% if mesSeancesProjection != null %}
+				<div class='tuile'>
+					<h2>Mes séances en projection:</h2>
+					{% for Seance in mesSeancesProjection %}
+						<div>
+							{% if Seance.Film is defined %}
+								<strong>{{Seance.Film.titre}}</strong>
+							{% else %}
+								<strong>{{Seance.typeSeance}}</strong>
+							{% endif %}
+							<br>
+							{{Seance.horaire|format_datetime('full', 'short', locale='fr')}}
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			{% if seanceProjectionPourvoir != null and app.user.projection == true %}
+				<div class='tuile'>
+					<h2>La prochaine séance en projection à pourvoir est:</h2>
+					<div>
+						<strong>{{seanceProjectionPourvoir.horaire|format_datetime('full', 'short', locale='fr')}}</strong>
+						pour
+						{% if seanceProjectionPourvoir.Film.titre is defined %}
+							{{seanceProjectionPourvoir.Film.titre}}
+						{% else %}
+							{{seanceProjectionPourvoir.typeSeance}}
+						{% endif %}
+					</div>
+				</div>
+
+			{% endif %}
+
+			{% if app.user.projection == true %}
+				<div class='tuile'>
+					<h2>Nb de places en projection à pourvoir:</h2>
+					<div class="bigNumber">
+						{{nbPlaceProjection}}
+					</div>
+				</div>
+			{% endif %}
+		</div>
+
+	</section>
+{% endblock %}

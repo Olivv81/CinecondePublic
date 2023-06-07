@@ -4,8 +4,9 @@
 {% endblock %}
 
 {% block body %}
-	<div class='undernav'>
-		<input type="button" class="btn" value="Retour!" onclick="history.back()">
+	<div
+		class='undernav'>
+		{# <input type="button" class="btn" value="Retour!" onclick="history.back()"> #}
 		<h2>{{app.request.get('jour')|format_datetime('full', 'none', locale='fr')}}</h2>
 
 	</div>
@@ -45,13 +46,18 @@
 				<div>
 					{% for schedule in schedule %}
 						<article>
-							<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
-								<img src="{{schedule.seance.film.affichette}}" class="affiche">
+							<a href="{{path('fdetail', {'id':schedule.film.id})}}">
+								{% if schedule.film.affichette %}
+									<img src="{{schedule.film.affichette}}" class="affiche" alt="affiche">
+								{% else %}
+									<img src="{{ absolute_url(asset('images/film/'~schedule.film.imagename)) }}" class="affiche" alt="affiche">
+								{% endif %}
+
 							</a>
-							<h3>{{schedule.seance.film.titre}}</h3>
+							<h3>{{schedule.film.titre}}</h3>
 							<ul>
 								<li>
-									{{schedule.seance.film.realisateurs}}
+									{{schedule.film.realisateurs}}
 								</li>
 								<li>Séance à
 									<strong>{{schedule.horaire|date('H:i')}}</strong>

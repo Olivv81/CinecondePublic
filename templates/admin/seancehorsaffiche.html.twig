@@ -1,0 +1,28 @@
+{% extends 'basebenevole.html.twig' %}
+
+
+{% block body %}
+
+	<section>
+		<a href="newseancehorsaffiche">Créer une nouvelle séance hors programmation.</a>
+		{% for horaire in horaires %}
+
+			<article>
+				<div>
+					<strong>{{horaire.horaire|format_datetime('full', 'short', locale='fr')}}</strong>
+					:
+				</div>
+				<div>
+					{{horaire.typeSeance}}
+				</div>
+				<div class="icon">
+					<a href="{{path('editseancehorsaffiche', {'id':horaire.id})}}" class="icon"><img src="{{ absolute_url(asset('images/iconbene/edit_icon_184293.png')) }}" alt="modifier"/></a>
+
+
+					<a href="{{path('supprimerseancehorsaffiche',{'id':horaire.id})}}" class="icon"><img src="{{ absolute_url(asset('images/iconbene/delete_icon_184291.png')) }}" alt="supprimer"/></a>
+
+				</div>
+			</article>
+		{% endfor %}
+	</section>
+{% endblock %}

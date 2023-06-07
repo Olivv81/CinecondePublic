@@ -1,0 +1,23 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% form_theme formProfil _self %}
+
+
+{% block body %}
+	<section tab="profil">
+		<div class='form'>
+
+			{{form_start(formProfil)}}
+			{{form_rest(formProfil)}}
+			<a href="{{path('password')}}">Modifier mon mot de passe</a>
+
+			<button type="submit" class="btn">
+
+				Valider
+
+			</button>
+			{{form_end(formProfil)}}
+		</div>
+	</section>
+
+{% endblock %}

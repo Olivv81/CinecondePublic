@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% form_theme NLContactForm _self %}
+
+{% block body %}
+	<div class='undernav'>
+		<h2>Enregistrez votre adresse mail pour recevoir la Newsletter</h2>
+	</div>
+
+	<div class="submitform">
+		{{ form_start(NLContactForm) }}
+		{# <button type="submit" class="btn">Envoyer !</button> #}
+
+		{{form_end(NLContactForm)}}
+
+	</div>
+
+
+{% endblock %}

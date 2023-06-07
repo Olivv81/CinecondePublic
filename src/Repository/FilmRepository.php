@@ -61,8 +61,6 @@ class FilmRepository extends ServiceEntityRepository
             ->innerJoin('App\Entity\Horaire', 'h', 'WITH', 's.id = h.seance')
             ->andWhere('h.horaire >= :today')
             ->setParameter('today', $date->Format('Y-m-d H:i:s'))
-            ->addSelect('s')
-            ->addSelect('h')
             ->orderBy('h.horaire', 'ASC')
 
             ->getQuery()
@@ -77,8 +75,7 @@ class FilmRepository extends ServiceEntityRepository
             ->innerJoin('f.evenements', 'e')
             ->where('e.id= :event')
             ->setParameter('event', $event)
-            ->join('f.seances', 's')
-            ->join('s.horaires', 'h')
+            ->join('f.horaires', 'h')
             ->orderBy('h.horaire', 'ASC')
             ->getQuery()
             ->getResult();

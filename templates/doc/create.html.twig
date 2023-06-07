@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}
+
+
+{% form_theme formDoc _self %}
+
+
+{% block body %}
+
+
+	<div class='submitform'>
+		<h3>Enregistrement d'un document</h3>
+		{{form_start(formDoc)}}
+
+
+		{{ form_rest(formDoc) }}
+
+		<button type="submit" class="btn">
+			{% if editMode %}
+				Enregistrer !
+			{% else %}
+				Ajouter le document
+			{% endif %}
+		</button>
+		{{form_end(formDoc)}}
+	</div>
+
+
+{% endblock %}

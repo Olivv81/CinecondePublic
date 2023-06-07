@@ -125,6 +125,9 @@
             "./config/routes/liip_imagine.yaml"
         ]
     },
+    "lorenzo/pinky": {
+        "version": "1.0.6"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
@@ -255,9 +258,6 @@
         "files": [
             "./config/packages/sensio_framework_extra.yaml"
         ]
-    },
-    "swiftmailer/swiftmailer": {
-        "version": "v6.2.7"
     },
     "symfony/amqp-messenger": {
         "version": "v5.2.12"
@@ -402,6 +402,18 @@
     "symfony/intl": {
         "version": "v5.2.7"
     },
+    "symfony/lock": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.2",
+            "ref": "8e937ff2b4735d110af1770f242c1107fdab4c8e"
+        },
+        "files": [
+            "./config/packages/lock.yaml"
+        ]
+    },
     "symfony/mailer": {
         "version": "4.3",
         "recipe": {
@@ -415,10 +427,10 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.0",
+        "version": "1.43",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
@@ -471,6 +483,9 @@
     "symfony/options-resolver": {
         "version": "v5.2.4"
     },
+    "symfony/password-hasher": {
+        "version": "v5.4.3"
+    },
     "symfony/phpunit-bridge": {
         "version": "5.1",
         "recipe": {
@@ -521,6 +536,9 @@
     },
     "symfony/proxy-manager-bridge": {
         "version": "v5.2.4"
+    },
+    "symfony/rate-limiter": {
+        "version": "v5.4.11"
     },
     "symfony/redis-messenger": {
         "version": "v5.2.12"
@@ -583,20 +601,6 @@
     },
     "symfony/string": {
         "version": "v5.2.8"
-    },
-    "symfony/swiftmailer-bundle": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.5",
-            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
-        },
-        "files": [
-            "./config/packages/dev/swiftmailer.yaml",
-            "./config/packages/swiftmailer.yaml",
-            "./config/packages/test/swiftmailer.yaml"
-        ]
     },
     "symfony/translation": {
         "version": "3.3",
@@ -707,11 +711,20 @@
     "theseer/tokenizer": {
         "version": "1.2.1"
     },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.4"
+    },
     "twbs/bootstrap": {
         "version": "v4.3.1"
     },
+    "twig/cssinliner-extra": {
+        "version": "v3.4.0"
+    },
     "twig/extra-bundle": {
         "version": "v3.3.1"
+    },
+    "twig/inky-extra": {
+        "version": "v3.4.0"
     },
     "twig/intl-extra": {
         "version": "v3.3.0"

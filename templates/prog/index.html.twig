@@ -4,24 +4,38 @@
 {% endblock %}
 
 {% block body %}
+
 	<div class='undernav'>
 
 		<h2>Films à l'affiche</h2>
-		{% if is_granted('ROLE_USER') %}
+		{% if is_granted('ROLE_ADMIN') %}
 			<a href="{{path('movie-create')}}">Ajouter un nouveau film</a>
 		{% endif %}
 	</div>
 
-	<section class="prog">
+	<section
+		class="prog">
+		{# <div class="info">
+					<h3>Flash info !</h3>
+		
+					<p>
+						En raison d'un problème d'alarme incendie, nous avons le regret de vous informer que nous devons annuler les toutes séances de dimanche 12/03/2023 (aujourd'hui) et de lundi 13/03/2023. La prochaine séance est donc Mardi 14/03/2023 à 20h pour Titanic en 3D.
+										Nous sommes désolés de ce contre temps. Un grand merci pour votre compréhension.</p>
+				</div> #}
 		{% for schedule in schedule_just_aftertoday %}
 			<article>
-				<a href="{{path('fdetail', {'id':schedule.seance.film.id})}}">
-					<img src="{{schedule.seance.film.affichette250}}" class="affiche" alt="affiche du film">
+				<a href="{{path('fdetail', {'id':schedule.film.id})}}">
+					{% if schedule.Film.affichette250 %}
+						<img src="{{schedule.Film.affichette250}}" class="affiche" alt="affiche">
+					{% else %}
+						<img src="{{ absolute_url(asset('images/film/'~schedule.Film.imagename)) }}" class="affiche" alt="affiche">
+					{% endif %}
+
 				</a>
-				<h3>{{schedule.seance.film.titre}}</h3>
+				<h3>{{schedule.Film.titre}}</h3>
 				<ul>
 					<li>
-						{{schedule.seance.film.realisateurs}}
+						{{schedule.Film.realisateurs}}
 					</li>
 					<li>Prochaine séance le
 						{{schedule.horaire|date('d/m/Y')}}</li>

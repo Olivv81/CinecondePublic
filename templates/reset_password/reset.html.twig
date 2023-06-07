@@ -1,0 +1,31 @@
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+{% block stylesheets %}
+
+	{{ encore_entry_link_tags('beneApp') }}
+
+
+{% endblock %}
+{% block javascripts %}
+
+
+	{{ encore_entry_script_tags('beneApp') }}
+
+{% endblock %}
+{% form_theme resetForm _self %}
+{% block body %}
+	<section>
+		<article class='password'>
+			<h1>Création de votre mot de passe</h1>
+			<div class='form'>
+				{{ form_start(resetForm) }}
+				{{ form_row(resetForm.plainPassword) }}
+				<p>(votre identifiant sera tout simplement votre adresse mail sur laquel vous avez reçu notre invitation).</p>
+				<button class="btn btn-primary">céer mon mot de passe et me connecter</button>
+				{{ form_end(resetForm) }}
+			</div>
+		</article>
+	</section>
+{% endblock %}

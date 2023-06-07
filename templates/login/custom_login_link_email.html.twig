@@ -1,0 +1,40 @@
+{% apply inky_to_html |inline_css(source('@styles/foundation-emails.css')) %}
+
+<style>
+	p.white {
+		font-size: 1.2rem;
+		color: white;
+		font-weight: 100;
+	}
+	h2 {
+		font-size: 30px;
+		margin: 0 0 0 5px;
+		padding: 0;
+
+		font-weight: 100;
+	}
+</style>
+
+<container>
+	<wrapper class="header" bgcolor="#555555">
+		<row>
+			<columns small="4">
+				<img src="https://cineconde.fr/images/logocinecondeblanc.png" alt="Logo!" height="50">
+			</columns>
+		</row>
+
+	</wrapper>
+	<center>
+		<h4 class="text-center">Bienvenu sur notre site CinéCondé</h4>
+		<p>Cliquer sur le lien ci-dessous pour vous connecter et créer votre mot de passe. Ce lien est propre à votre compte et ne doit pas être partager.</p>
+		<p>N'hésitez pas à répondre à ce message si vous avez des difficultés à vous connecter</p>
+
+
+		<a href="{{action_url}}">
+			Se connecter !</a>
+
+	</center>
+
+
+</container>
+{% endapply %}

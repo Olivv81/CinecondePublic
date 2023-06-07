@@ -6,6 +6,7 @@ use app\Entity\Film;
 use App\Form\EventType;
 use App\Entity\Evenement;
 use App\Form\EventwihtoutPictureType;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,9 +17,9 @@ class EventController extends AbstractController
     /**
      * @Route("/event", name="event")
      */
-    public function Event()
+    public function Event(ManagerRegistry $doctrine)
     {
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $repo = $doctrine->getRepository(Evenement::class);
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $event = $repo->findby(array(), array('date' => 'asc'));
@@ -36,13 +37,14 @@ class EventController extends AbstractController
      * 
      * @Route("/evdetail/{id}", name="evdetail")
      */
-    public function EvDetail($id)
+    public function EvDetail(ManagerRegistry $doctrine, $id)
     {
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $repo = $doctrine->getRepository(Evenement::class);
         $event = $repo->find($id);
-        $movies = $this->getDoctrine()->getRepository(Film::class)->moviePerEvent($event);
-
-
+        $movies = $doctrine->getRepository(Film::class)->moviePerEvent($event);
+        if (!$event) {
+            return $this->redirectToRoute('event');
+        }
         return $this->render('event/evdetail.html.twig', [
             'event' => $event,
             'active_tab' => "event",
@@ -54,11 +56,11 @@ class EventController extends AbstractController
      * @Route("/event/new", name="event_create")
      * @Route("/event/{id}/edit", name="event-edit")
      */
-    public function form(Evenement $event = null, Request $request)
+    public function form(ManagerRegistry $doctrine, Evenement $event = null, Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        $manager = $this->getDoctrine()->getManager();
+        $manager = $doctrine->getManager();
 
         if (!$event) {
             $event = new Evenement();
@@ -91,11 +93,11 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{id}/sup", name="event-remove")
      */
-    public function eventRemove($id)
+    public function eventRemove(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Evenement::class);
         $event = $repo->find($id);
 
         $em->remove($event);
@@ -106,10 +108,10 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{id}/supconfirm", name="event-remove-confrim")
      */
-    public function eventRemoveconfirm($id)
+    public function eventRemoveconfirm(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $repo = $doctrine->getRepository(Evenement::class);
         $event = $repo->find($id);
 
         return $this->render('event/eventremove.html.twig', [
@@ -121,10 +123,10 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{id}/supimage", name="picture-remove")
      */
-    public function pictureRemove($id)
+    public function pictureRemove(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $repo = $doctrine->getRepository(Evenement::class);
         $event = $repo->find($id);
 
         return $this->render('event/pictureremove.html.twig', [
@@ -135,11 +137,11 @@ class EventController extends AbstractController
     /**
      * @Route("/event/{id}/supimageconf", name="picture-remove-confirm")
      */
-    public function pictureRemoveConfirm($id)
+    public function pictureRemoveConfirm(ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em = $this->getDoctrine()->getManager();
-        $repo = $this->getDoctrine()->getRepository(Evenement::class);
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository(Evenement::class);
         $event = $repo->find($id);
         $filename = $event->getImageName();
 

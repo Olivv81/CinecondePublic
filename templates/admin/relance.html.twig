@@ -1,0 +1,19 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% form_theme formRelance _self %}
+
+{% block body %}
+	<div class='undernav'>
+		<h2>Création d'un mail de relance</h2>
+	</div>
+
+	<div class="form">
+		{{form_start(formRelance)}}
+		{{form_rest(formRelance)}}
+		<button type="submit" class="btn">
+			Envoyer !
+		</button>
+		{{form_end(formRelance)}}
+	</div>
+
+{% endblock %}

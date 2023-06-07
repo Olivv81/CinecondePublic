@@ -1,0 +1,113 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('filter') }}
+{% endblock %}
+
+
+{% block body %}
+
+	<section>
+
+		<input class="search" id="myInput" type="text" placeholder="Rechercher..">
+
+		<form action="{{path('submitplanning', {team: team})}}" , method="POST">
+
+			<div class='undernav'>
+				{% if team == 'accueil' %}
+					<h2>Gerer le planning accueil</h2>
+				{% endif %}
+				{% if team == 'projection' %}
+					<h2>Gerer le planning projection</h2>
+				{% endif %}
+
+				<div class="stickHead">
+					<button type="submit" class="btn">valider</button>
+				</div>
+			</div>
+			{% for horaire in horaire %}
+
+				<article class='seanceForm'>
+					<div>
+						<strong>{{horaire.horaire|format_datetime('full', 'short', locale='fr')}}</strong>
+						:
+					</div>
+					<div>
+						{% if horaire.aLAffiche == true %}
+							{{horaire.Film.titre}}
+						{% else %}
+							{{horaire.typeSeance}}
+						{% endif %}
+					</div>
+
+					{% if team == 'accueil' %}
+						<ul class='case'>
+							{% for i in 0..1 %}
+								{% if horaire.accueil[i] is defined %}
+									<li class="inscrit">{{horaire.accueil[i].prenom}}
+										{{horaire.accueil[i].nom}}
+										<a href="{{path('desinscrire',{'idhoraire':horaire.id, 'iduser':horaire.accueil[i].id, "equipe":"accueil"})}}">Désinscire</a>
+									</li>
+								{% else %}
+									<select name="{{horaire.id}}[accueil][{{i}}]" id="{{horaire.id}}">
+										<option value="">
+											Libre
+										</option>
+										{% for user in usersAccueil %}
+											<Option value="{{user.id}}">{{user.prenom}}
+												{{user.nom}}</Option>
+										{% endfor %}
+									</select>
+								{% endif %}
+							{% endfor %}
+						</ul>
+					{% endif %}
+
+					{% if team == "projection" %}
+						<ul class='case'>
+							{% for i in 0..1 %}
+								{% if horaire.projection[i] is defined %}
+									<li class="inscrit">{{horaire.projection[i].prenom}}
+										{{horaire.projection[i].nom}}
+										<a href="{{path('desinscrire',{'idhoraire':horaire.id, 'iduser':horaire.projection[i].id, "equipe":"projection"})}}">Désinscire</a>
+									</li>
+								{% else %}
+									<select name="{{horaire.id}}[projection][{{i}}]" id="{{horaire.id}}">
+										<option value="">
+											Libre
+										</option>
+										{% for user in usersProjection %}
+											<Option value="{{user.id}}">{{user.prenom}}
+												{{user.nom}}</Option>
+										{% endfor %}
+									</select>
+								{% endif %}
+							{% endfor %}
+						</ul>
+					{% endif %}
+
+				</article>
+
+			{% endfor %}
+
+
+		</form>
+	</section>
+
+	<script>
+
+
+		document.addEventListener("DOMContentLoaded", function (event) {
+var scrollpos = sessionStorage.getItem('scrollpos');
+if (scrollpos) {
+window.scrollTo(0, scrollpos);
+sessionStorage.removeItem('scrollpos');
+}
+});
+
+window.addEventListener("beforeunload", function (e) {
+sessionStorage.setItem('scrollpos', window.scrollY);
+});
+	</script>
+{% endblock %}

@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,11 +24,16 @@ class MovieWithoutPictureType extends AbstractType
             ->add('titre')
             ->add('realisateurs')
             ->add('acteurs')
-            ->add('anneeproduction', DateTimeType::class, [
+            ->add('anneeproduction', DateType::class, [
                 'widget' => 'single_text',
+                'required' => \false,
+                'format' => 'yyyy',
+                'html5' => \false,
+
             ])
             ->add('dateSortie', DateTimeType::class, [
                 'widget' => 'single_text',
+                'required' => \false,
             ])
             ->add('duree', TimeType::class, [
                 'widget' => 'single_text'

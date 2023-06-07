@@ -9,11 +9,12 @@
 {% endblock %}
 
 {% block body %}
-	<div class='undernav'>
-		<input type="button" class="btn" value="Retour!" onclick="history.back()">
+	<div
+		class='undernav'>
+		{# <input type="button" class="btn" value="Retour!" onclick="history.back()"> #}
 
 		<h2>Détail de l'évènement</h2>
-		{% if is_granted('ROLE_USER') %}
+		{% if is_granted('ROLE_ADMIN') %}
 			<a href="{{path('event-edit', {'id':event.id} )}}" class="iconadmin"><img src="{{ absolute_url(asset('images/editicon.png')) }}" alt="edit"/></a>
 			<a href="{{path("event-remove-confrim", {'id':event.id} )}}" class="iconadmin"><img src="{{ absolute_url(asset('images/trashicon.png')) }}" alt="edit"/></a>
 		{% endif %}
@@ -47,20 +48,6 @@
 				<li>Tarif(s) :
 					{{event.tarifs|nl2br}}
 				</li>
-			</ul>
-			{% if movies is not empty %}
-				<h4>Film(s):</h4>
-				<ul class="filmseven">
-
-					{% for movie in movies %}
-						<li>
-							<a href="{{path('fdetail', {'id':movie.id})}}">
-								<img src="{{movie.affichette}}" alt="" class='affiche'>
-							</a>
-						</li>
-					{% endfor %}
-				{% endif %}
-
 
 			</ul>
 			{% if event.video %}
@@ -70,18 +57,40 @@
 			{% else %}
 				{% if event.videoVimeo %}
 					<div class="video" data-vimeo-url="{{event.videoVimeo}}" id="{video01_name}"></div>
+					<script src="https://player.vimeo.com/api/player.js"></script>
+					<script>
+						var video01Player = new Vimeo.Player('BAVimeo');
+video01Player.on('play', function () {
+console.log('Played the first video');
+});
+					</script>
 				{% endif %}
 			{% endif %}
+
+			{% if movies is not empty %}
+				<h4>Film(s):</h4>
+				<ul class="filmseven">
+
+					{% for movie in movies %}
+						<li>
+							<a href="{{path('fdetail', {'id':movie.id})}}">
+								{% if movie.imagename %}
+									<img src="{{ absolute_url(asset('images/film/'~movie.imagename)) }}" class="affiche" alt="affiche">
+								{% else %}
+									<img src="{{movie.affichette}}" alt="" class='affiche'>
+								{% endif %}
+
+							</a>
+						</li>
+					{% endfor %}
+				{% endif %}
+
+
+			</ul>
+
 		</div>
 
 	</article>
 
-	<script src="https://player.vimeo.com/api/player.js"></script>
-	<script>
-		var video01Player = new Vimeo.Player('BAVimeo');
-video01Player.on('play', function () {
-console.log('Played the first video');
-});
-	</script>
 
 {% endblock %}

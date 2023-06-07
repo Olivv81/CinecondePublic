@@ -2,20 +2,17 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(
- * fields= {"username"},
- * message= "l'utilisateur existe déjà."
- * )
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -25,65 +22,61 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $username;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min="8", minMessage="Votre mot de passe doit faire minimum 8 caractères.")
-     * 
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Email()
+     * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     
-     */
-    private $prenom;
-    /** 
-     * @Assert\EqualTo(propertyPath="password", message = "vous n'avez pas saisi le même mot de passe"))
-     */
-    public $confirm_password;
 
     /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
 
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="binary", nullable=true)
+     */
+    private $selection;
+
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $prenom;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $accueil;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $projection;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateLien;
+
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -98,23 +91,27 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPrenom(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->prenom;
+        return (string) $this->email;
     }
 
-    public function setPrenom(string $prenom): self
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
     {
-        $this->prenom = $prenom;
+        return (string) $this->email;
+    }
 
-        return $this;
-    }
-    public function eraseCredentials()
-    {
-    }
-    public function getSalt()
-    {
-    }
+    /**
+     * @see UserInterface
+     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -127,6 +124,121 @@ class User implements UserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getSelection()
+    {
+        return $this->selection;
+    }
+
+    public function setSelection($selection): self
+    {
+        $this->selection = $selection;
+
+        return $this;
+    }
+
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function isAccueil(): ?bool
+    {
+        return $this->accueil;
+    }
+
+    public function setAccueil(?bool $accueil): self
+    {
+        $this->accueil = $accueil;
+
+        return $this;
+    }
+
+    public function isProjection(): ?bool
+    {
+        return $this->projection;
+    }
+
+    public function setProjection(?bool $projection): self
+    {
+        $this->projection = $projection;
+
+        return $this;
+    }
+
+    public function getDateLien(): ?\DateTimeInterface
+    {
+        return $this->dateLien;
+    }
+
+    public function setDateLien(?\DateTimeInterface $dateLien): self
+    {
+        $this->dateLien = $dateLien;
 
         return $this;
     }

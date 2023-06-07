@@ -1,0 +1,149 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+form,
+.form {
+    max-width: 700px;
+    font-family: Proza;
+    margin: 0 auto 0 auto;
+    width: 100%;
+
+}
+
+.form-group {
+    width: 100%;
+    margin: 5px 0 5px 0;
+    padding: 0px;
+}
+
+input[type=text],
+select,
+input[type=password],
+input[type=email],
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 0px 0;
+    display: inline-block;
+    border: 1px solid var(--color1);
+    border-radius: 4px;
+    padding: 5px 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+textarea {
+    min-height: 80px;
+}
+
+input[type=text]:focus {
+    background-color: var(--color5);
+}
+
+.stickHead .btn,
+.stickHead a,
+button.btn {
+    display: block;
+    margin: 0px auto;
+    -webkit-box-shadow: 0px 0px 0px 0px #9fb4f2;
+    box-shadow: 0px 0px 0px 0px #9fb4f2;
+    background-color: var(--color3);
+    border-radius: 5px;
+    border: 1px solid var(--color3);
+    cursor: pointer;
+    color: white;
+    font-size: 0.8rem;
+    padding: 3px 0px;
+    text-decoration: none;
+    width: 130px;
+    text-align: center;
+    font-family: Proza;
+}
+
+button.btn:hover {
+    background-color: rgb(91, 91, 91);
+}
+
+button.btn:active {
+    position: relative;
+    top: 1px;
+}
+
+.search {
+    margin: 5px auto 0 auto !important;
+    max-width: 700px;
+}
+
+.stickHead {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: -webkit-min-content;
+    width: -moz-min-content;
+    width: min-content;
+    margin: 0 0px 0 0px;
+    position: sticky;
+    top: 45px;
+}
+
+select:nth-child(1) {
+    -ms-grid-row: 1;
+    grid-row: 1;
+}
+
+select:nth-child(2) {
+    -ms-grid-row: 2;
+    grid-row: 2;
+}
+
+li.inscrit {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border: 5px;
+    font-size: 0.8rem;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+}
+
+.inscrit a {
+    color: white;
+    font-size: 0.6rem;
+}
+
+.inscrit a:hover {
+    color: var(--color5);
+}
+
+.password button {
+    width: auto;
+    padding: 5px;
+}
+
+
+@media screen and (max-width: 755px) {
+
+    form {
+        border-radius: 25px;
+        margin: 10px 5px 5px 0px;
+    }
+
+    .stickHead {
+        background-color: var(--color4);
+        width: -webkit-min-content;
+        width: -moz-min-content;
+        width: min-content;
+
+
+    }
+
+
+}

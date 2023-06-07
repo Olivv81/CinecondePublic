@@ -1,0 +1,140 @@
+{% extends 'basebenevole.html.twig' %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('filter') }}
+{% endblock %}
+
+{% block body %}
+	<section tab="planning">
+		<input class="search" id="myInput" type="text" placeholder="Rechercher..">
+		{% if horaire is empty %}
+			<article>
+				<p>Il n'y a pas de séance</p>
+			</article>
+		{% endif %}
+
+		{% for horaire in horaire %}
+			{% set DejaInscrit = false %}
+			{% set AccueilDejaInscrit = false %}
+			{% set ProjectionDejaInscrit = false %}
+
+			{% for user in horaire.accueil %}
+				{% if user.id == userId %}
+					{% set AccueilDejaInscrit = true %}
+					{# {% set DejaInscrit = true %} #}
+
+				{% endif %}
+			{% endfor %}
+
+			{% for user in horaire.projection %}
+				{% if user.id == userId %}
+					{% set ProjectionDejaInscrit = true %}
+					{# {% set DejaInscrit = true %} #}
+				{% endif %}
+			{% endfor %}
+
+			<article {% if AccueilDejaInscrit == true%} class='border' {% endif %}>
+				<div>
+					<strong>{{horaire.horaire|format_datetime('full', 'short', locale='fr')}}</strong>
+					{% if horaire.Film is defined %}
+						({{horaire.Film.duree}}min):
+					{% endif %}
+				</div>
+				<div>
+					{% if horaire.aLAffiche == true %}
+						<a href="{{path('fdetail', {'id':horaire.Film.id})}}" target="_blank">{{horaire.Film.titre}}</a>
+
+					{% else %}
+						{{horaire.typeSeance}}
+					{% endif %}
+
+
+				</div>
+
+
+				<div class="grill">
+					<ul {% if AccueilDejaInscrit == false%} class='caseAccueil' {% else %} class='caseAccueil border' {% endif %}>
+						<div>Accueil</div>
+						{% for i in 0..1 %}
+							{% if horaire.accueil[i] is defined %}
+
+								<li>{{horaire.accueil[i].prenom}}
+									{{horaire.accueil[i].nom}}
+								</li>
+							{% else %}
+								<li></li>
+							{% endif %}
+						{% endfor %}
+						<div class='btn'>
+							{% if AccueilDejaInscrit == true and optionAdmin.desincriptionAccueil == false %}
+								<a href="{{path('medesinscrire', {'id':horaire.id, 'commission':'accueil' })}}">me désinscrire</a>
+							{% else %}
+								{% if horaire.accueil|length < 2  and optionAdmin.inscriptionAccueil == false and DejaInscrit == false and app.user.accueil == true %}
+									<a href="{{path('minscrire', {'id':horaire.id, 'commission':'accueil'})}}">m'inscrire</a>
+								{% endif %}
+							{% endif %}
+						</div>
+					</ul>
+
+
+					<ul {% if ProjectionDejaInscrit == false%} class='caseProj' {% else %} class='caseProj border' {% endif %}>
+						<div>Projection</div>
+						{% for i in 0..1 %}
+							{% if horaire.projection[i] is defined %}
+
+								<li>{{horaire.projection[i].prenom}}
+									{{horaire.projection[i].nom}}
+								</li>
+							{% else %}
+								<li></li>
+							{% endif %}
+						{% endfor %}
+						<div class="btn">
+							{% if ProjectionDejaInscrit == true and optionAdmin.desinscriptionProjection == false %}
+								<a href="{{path('medesinscrire', {'id':horaire.id, 'commission':'projection'})}}">me désinscrire</a>
+							{% else %}
+								{% if horaire.Projection|length < 2  and optionAdmin.inscriptionProjection == false and DejaInscrit == false and app.user.projection == true %}
+									<a href="{{path('minscrire', {'id':horaire.id, 'commission':'projection'})}}">m'inscrire</a>
+								{% endif %}
+							{% endif %}
+						</div>
+					</ul>
+
+				</div>
+
+			</article>
+		{% endfor %}
+	</section>
+
+
+	{# <script>
+				
+						{
+				# $(document).ready(function () {
+				$("#myInput").on("keyup", function () {
+				var value = $(this).val().toLowerCase();
+				$("article").filter(function () {
+				$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				});
+				});
+				});
+				#
+				}
+				
+				
+				document.addEventListener("DOMContentLoaded", function (event) {
+				var scrollpos = sessionStorage.getItem('scrollpos');
+				if (scrollpos) {
+				window.scrollTo(0, scrollpos);
+				sessionStorage.removeItem('scrollpos');
+				}
+				});
+				
+				window.addEventListener("beforeunload", function (e) {
+				sessionStorage.setItem('scrollpos', window.scrollY);
+				});
+					</script> #}
+
+{% endblock %}

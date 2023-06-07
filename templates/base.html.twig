@@ -19,13 +19,15 @@
 				CinéCondé - Le Royal
 			{% endblock %}
 		</title>
-		{# <link rel="stylesheet" href="..\styles\styles.css"> #}
+		<link rel="stylesheet" type="text/css" href="..\styles\jquery-ui.min.css">
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
 		{% block javascripts %}
 			{{ encore_entry_script_tags('app') }}
 			{{ encore_entry_script_tags('jourbtn') }}
+			{{ encore_entry_script_tags('datepicker') }}
+
 
 		{% endblock %}
 	</head>
@@ -47,26 +49,23 @@
 			<a href="{{path('aboutus')}}" class="{% if active_tab == 'aboutus' %} active{% endif %}">Qui sommes nous ?</a>
 			<a href="{{path('tarifs')}}" class="{% if active_tab == 'tarifs' %} active{% endif %}">Tarifs</a>
 			<a href="{{path('contact')}}" class="{% if active_tab == 'contact' %} active{% endif %}">Contact</a>
-			{# {% if not app.user %}
-																		<a href="{{path('security_login')}}" class="{% if active_tab == 'connexion' %} active{% endif %}">connexion</a>
-																		{% else %}
-																		<a href="{{path('security_logout')}}" class="">deconnexion</a>
-																		{% endif %} #}
-		</a>
+			{% if is_granted('ROLE_ADMIN') %}
+				<a href="{{path('doc')}}" class="{% if active_tab == 'doc' %} active{% endif %}">Doc</a>
+
+			{% endif %}
+
+			<form class='dayfilter' id="dayFilter" name="dayFilter" action={{path('jour', { 'jour':app.request.query.get("jour") } )}} methode="get">
+
+				<label for="jour" class="">Agenda</label>
+				<input type="text" id="datepicker" name="jour"/>
 
 
-		<form class='dayfilter' name="dayFilter" action={{path('jour', { 'jour':app.request.query.get("jour") } )}} methode="get">
-
-			<label for="jour" class=""></label>
-			<input type="date" id="jour" name="jour">
+			</form>
+		</nav>
 
 
-		</form>
-	</nav>
-
-
-	<script>
-		function myFunction() {
+		<script>
+			function myFunction() {
 var x = document.getElementById("myTopnav");
 if (x.className === "topnav") {
 x.className += " responsive";
@@ -74,32 +73,43 @@ x.className += " responsive";
 x.className = "topnav";
 }
 }
-	</script>
 
-	<body>
-		{% block body %}{% endblock %}
-	</body>
+const jourbt = document.getElementById("datepicker");
 
-	<footer>
-		<p>
-			<a href="{{path('download',{'file':"affichette"})}}">Télécharger l'affichette</a>
 
-			<a href="{{path('download',{'file':"programme"})}}">Télécharger notre programme</a>
-		</p>
-		<p>Suivez-nous :
-			<a href="https://www.facebook.com/cinecondesurnoireau">
-				<img src="{{ absolute_url(asset('images/iconefb.png')) }}" alt="Icone Facebook" class="logofb"/>
-			</a>
-		</p>
-		<p>
-			<a href="{{path('mentions-legales')}}">Mentions légales</a>
-		</p>
-		<p>
-			Image de fond par
-			<a href="https://pixabay.com/photos/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=918655">Free-Photos</a>
-			de
-			<a href="https://pixabay.com/fr/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=918655">Pixabay</a>
-		</p>
+jourbt.addEventListener('change', function () {
 
-	</footer>
+document.dayFilter.submit();
+});
+		</script>
+
+		<body>
+			{% block body %}{% endblock %}
+		</body>
+
+		<footer>
+			<p>
+				<a href="{{path('download',{'file':"affichette"})}}">Télécharger l'affichette</a>
+			</p>
+			<p>
+				<a href="{{path('download',{'file':"programme"})}}">Télécharger le programme</a>
+			</p>
+			<p>Suivez-nous :
+				<a href="https://www.facebook.com/cinecondesurnoireau">
+					<img src="{{ absolute_url(asset('images/iconefb.png')) }}" alt="Icone Facebook" class="logofb"/>
+				</a>
+			</p>
+			<p>
+				<a href="{{path('mentions-legales')}}">Mentions légales</a>
+			</p>
+			<p>
+				Image de fond de
+				<a href="https://pixabay.com/fr/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=918655">Pixabay</a>
+			</p>
+			<p>
+				<a href="{{path('login')}}">Espace Bénévoles</a>
+			</p>
+
+		</footer>
+	</html>
 </html>

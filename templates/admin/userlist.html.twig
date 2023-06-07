@@ -1,0 +1,83 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('filter') }}
+{% endblock %}
+
+{% block body %}
+
+	<section>
+		<div class='undernav'>
+			<h2>Liste des bénévoles</h2>
+			<div class="stickHead">
+				<a href="{{path('newuser')}}">Nouveau profil</a>
+			</div>
+		</div>
+		<input class="search" id="myInput" type="text" placeholder="Rechercher..">
+		{% if users is empty %}
+			<article>
+				<p>Nous n'avons pas de bénévole inscrit !</p>
+			</article>
+		{% endif %}
+
+		{% for user in users %}
+			{% set admin= false %}
+			<article>
+
+				<h3>{{user.prenom}}
+					{{user.nom}}</h3>
+
+				<ul>
+					<li>e-email:
+						{{user.email}}</li>
+
+					{% if user.accueil == true %}
+						<li>Commission accueil</li>
+					{% endif %}
+					{% if user.projection %}
+						<li>Commission projection</li>
+					{% endif %}
+				</li>
+
+				{% for role in user.roles %}
+					{% if role == "ROLE_ADMIN" %}
+						<li>Administrateur</li>
+						{% set admin = true %}
+					{% endif %}
+
+				{% endfor %}
+			</ul>
+			{% if user.datelien %}
+				<div>dernière invitation envoyée le
+					{{user.datelien|format_datetime('full', 'short', locale='fr')}}</div>
+			{% endif %}
+
+			<div>
+				<a href="{{path('sendpass',{'email':user.email})}}">Envoyer une invitation</a>
+			</div>
+			<div class="icon">
+				<a href="{{path('edituser', {'id':user.id})}}" class="icon"><img src="{{ absolute_url(asset('images/iconbene/edit_icon_184293.png')) }}" alt="modifier"/></a>
+
+				{% if admin != true %}
+					<a href="{{path('supprimerUser',{'id':user.id})}}" class="icon"><img src="{{ absolute_url(asset('images/iconbene/delete_icon_184291.png')) }}" alt="supprimer"/></a>
+				{% endif %}
+			</div>
+
+
+		</article>
+
+	{% endfor %}
+</section>
+
+
+{# <script>
+	$(document).ready(function () {
+$("#myInput").on("keyup", function () {
+var value = $(this).val().toLowerCase();
+$("article").filter(function () {
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+});
+});
+});
+</script>  #}{% endblock %}

@@ -25,7 +25,9 @@ Encore
     .addEntry('jourbtn', './assets/jourbtn.js')
     .addEntry('addSeance', './assets/addSeance.js')
     .addEntry('addHoraire', './assets/addHoraire.js')
-
+    .addEntry('beneApp', './assets/beneApp.js')
+    .addEntry('filter', './assets/filter.js')
+    .addEntry('datepicker', './assets/jquery-ui.min.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
@@ -61,7 +63,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()

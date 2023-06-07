@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+	<div class='undernav'>
+		<h2>Listes des documents</h2>
+
+	</div>
+
+	<section class="prog">
+		{% if documents is empty %}
+			<article>
+				Il n'y a pas de document enregistré.
+			</article>
+		{% endif %}
+		{% for document in documents %}
+			<article class="doc">
+				<h3>Document n°{{document.id}}</h3>
+				<ul>
+					<li>Titre :
+						{{document.titre|nl2br}}</li>
+					<li>Description :
+						{{document.description|nl2br}}</li>
+					<li>Date de mise à jour :
+						{{document.updatedAt|date('d/m/Y')}}</li>
+					<li>
+						<a href="{{absolute_url(asset('documents/'~document.docname))}}">Télécharger le document</a>
+					</li>
+				</ul>
+				<a href="{{path('doc-edit', {'id':document.id} )}}">Modifier</a>
+
+			</article>
+		{% endfor %}
+	</section>
+{% endblock %}

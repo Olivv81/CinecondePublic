@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Documents;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @method Documents|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Documents|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Documents[]    findAll()
+ * @method Documents[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class DocumentsRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Documents::class);
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function add(Documents $entity, bool $flush = true): void
+    {
+        $this->_em->persist($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+
+    /**
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function remove(Documents $entity, bool $flush = true): void
+    {
+        $this->_em->remove($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+
+    // /**
+    //  * @return Documents[] Returns an array of Documents objects
+    //  */
+    /*
+    public function findByExampleField($value)
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('d.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    */
+
+    /*
+    public function findOneBySomeField($value): ?Documents
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
+}

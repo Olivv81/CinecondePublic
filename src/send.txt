@@ -1,0 +1,43 @@
+<?php
+
+namespace Send;
+
+use App\Entity\Film;
+use App\Entity\Horaire;
+use App\Entity\Documents;
+use App\Entity\Evenement;
+use App\Form\NewsLetterType;
+use Symfony\Component\Mime\Email;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+
+
+
+function Send(MailerInterface $mailer)
+{
+
+    $email = (new Email())
+        ->from('***REMOVED***')
+        ->to('***REMOVED***')
+        ->subject('newsletter');
+
+    // path of the Twig template to render
+
+    // pass variables (name => value) to the template
+
+
+    $mailer->send($email);
+    // $this->redirectToRoute("confirm");
+
+    // $mailer->send($email);
+    // return $this->redirectToRoute("confirm");
+
+
+
+}

@@ -4,7 +4,7 @@
 {% block body %}
 	<div class='undernav'>
 		<h2>Evènement(s)</h2>
-		{% if is_granted('ROLE_USER') %}
+		{% if is_granted('ROLE_ADMIN') %}
 			<a href="{{path('event_create')}}">Créer un nouvel évènement</a>
 		{% endif %}
 

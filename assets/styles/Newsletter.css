@@ -1,0 +1,33 @@
+.header {
+    background: #8a8a8a;
+}
+
+.header .columns {
+    padding-bottom: 0;
+}
+
+.header p {
+    color: #fff;
+    margin-bottom: 0;
+}
+
+.header .wrapper-inner {
+    padding: 20px;
+    /*controls the height of the header*/
+}
+
+.header .container {
+    background: #8a8a8a;
+}
+
+.wrapper.secondary {
+    background: #f3f3f3;
+}
+
+p.white {
+    font-size: 1.2rem;
+    color: white;
+    padding: 0 0 0 0;
+
+
+}

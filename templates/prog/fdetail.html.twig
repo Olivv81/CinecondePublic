@@ -1,12 +1,10 @@
 {% extends "base.html.twig" %}
 {% block body %}
-	<div class='undernav'>
-		<input type="button" class="btn" value="Retour!" onclick="history.back()">
+	<div
+		class='undernav'>
+		{# <input type="button" class="btn" value="Retour!" onclick="history.back()"> #}
 		<h2>Détail du film</h2>
-		{% if is_granted('ROLE_USER') %}
-			<a href="{{path('movie-edit', {'id':film.id} )}}" class="iconadmin"><img src="{{ absolute_url(asset('images/editicon.png')) }}" alt="edit"/></a>
-			<a href="{{path("movie-remove", {'id':film.id} )}}" class="iconadmin"><img src="{{ absolute_url(asset('images/trashicon.png')) }}" alt="sup"/></a>
-		{% endif %}
+
 	</div>
 
 	<article class="detail">
@@ -17,7 +15,7 @@
 		{% endif %}
 
 		<div class="description">
-			<h3>{{film.titre}}</h3>
+			<h3>{{film.titre|nl2br}}</h3>
 			<ul>
 				<li>de
 					{{film.realisateurs}}</li>
@@ -25,7 +23,8 @@
 					-
 					{{film.anneeproduction | date('Y')}}
 					-
-					{{film.duree|date('H\\hi')}}</li>
+					{{film.duree}}
+					minutes</li>
 				{% if film.acteurs %}
 					<li>avec
 						{{film.acteurs}}</li>
@@ -44,108 +43,53 @@
 
 			<h4>Synopsis :</h4>
 			<p>
-				{{film.synopsis}}
+				{{film.synopsis|nl2br}}
 			</p>
 		</div>
 		<div class="seance">
 			<h4>Séances :</h4>
-			{% if is_granted('ROLE_USER') %}
 
-				<ul class="seanceadmin">
-					{%for seance in film.seances %}
+			<ul>
+				{% if movie_schedule is empty %}
+					<p>Il n'y a pas de séance programmée pour ce film ...</p>
+				{% else %}
+					{% for horaires in movie_schedule %}
 						<li>
-							<div>Projection :
-								{{seance.projection}}
-								{% if seance.vo == 1 %}
-									en version originale
-								{% else %}
-									en version française
-								{% endif %}
-								<div>
-									<a href="{{path("seance-edit",{'id':seance.id} )}}" class="iconadmin">
-										<img src="{{ absolute_url(asset('images/editicon.png')) }}" alt="edit"/>
-									</a>
-									<a href="{{path("seance-remove",{'id':seance.id} )}}" class="iconadmin">
-										<img src="{{ absolute_url(asset('images/trashicon.png')) }}" alt="sup"/></a>
-								</div>
-
-							</div>
-
-							<ul class="horaireadmin">
-								{% for horaire in seance.horaires %}
-									<li>
-										<a href="{{path("horaire-remove",{'id':horaire.id} )}}" class="iconadmin">
-											<img src="{{ absolute_url(asset('images/trashicon.png')) }}" alt="sup"/></a>
-										{{horaire.horaire|format_datetime('full', 'short', locale='fr')}}
-
-									</li>
-								{% endfor %}
-							</ul>
-
+							{{horaires.horaire|format_datetime('full', 'short', locale='fr')}}
+							{% if horaires.troisD == 1 %}
+								- Projection en 3D
+							{% endif %}
+							{% if horaires.VO == 1 %}
+								- en version originale
+							{% endif %}
 
 						</li>
-
 					{% endfor %}
-					<a href="{{path("seance-create",{'idf':film.id})}}">Ajouter une projection</a>
-				</ul>
-
-			{% else %}
-				<ul>
-					{% if movie_schedule is empty %}
-						<p>Il n\'y a pas de séance programmée pour ce film ...</p>
-					{% else %}
-						{% for horaires in movie_schedule %}
-							<li>
-								{{horaires.horaire|format_datetime('full', 'short', locale='fr')}}
-								{% if horaires.seance.projection == "3D" %}
-									- Projection en 3D
-								{% endif %}
-								{% if horaires.seance.vo == 1 %}
-									- en version originale
-								{% endif %}
-
-							</li>
-						{% endfor %}
-					{% endif %}
 
 				</ul>
 			{% endif %}
 
 		</div>
 
-		{% if film.video %}
-			<div class="ba">
-				<div class="video">
-					<iframe src="https://player.allocine.fr/{{film.video}}.html?partner=ccg&amp;autoplay=1" id="myvideo" allowfullscreen="true"></iframe>
-				</div>
+
+		{% if film.videoYT %}
+			<div class="video">
+				<iframe src="https://www.youtube.com/embed/{{film.videoYT}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 		{% else %}
-			{% if film.videoYT %}
-				<div class="video">
-					<iframe src="https://www.youtube.com/embed/{{film.videoYT}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-				</div>
-			{% else %}
-				{% if film.videoVimeo %}
-					<div class="video" data-vimeo-url="{{film.videoVimeo}}" id="{video01_name}"></div>
-				{% endif %}
+			{% if film.videoVimeo %}
+				<div class="video" data-vimeo-url="{{film.videoVimeo}}" id="{video01_name}"></div>
+				<script src="https://player.vimeo.com/api/player.js"></script>
+				<script>
+					var video01Player = new Vimeo.Player('BAVimeo');
+video01Player.on('play', function () {
+console.log('Played the first video');
+});
+				</script>
+
 			{% endif %}
 		{% endif %}
 
 
 	</article>
-
-	<script src="https://player.vimeo.com/api/player.js"></script>
-	<script>
-		var video01Player = new Vimeo.Player('BAVimeo');
-video01Player.on('play', function () {
-console.log('Played the first video');
-});
-	</script>
-	<script>
-		var elem = document.getElementById("myvideo");
-if (elem.requestFullscreen) {
-elem.requestFullscreen();
-}
-	</script>
-
 {% endblock %}

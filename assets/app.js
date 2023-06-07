@@ -10,6 +10,10 @@
 import './styles/styles.css';
 import './styles/multiselect.css';
 import './styles/form.css';
+import './styles/document.css';
+import './styles/jquery-ui.min.css';
+
+
 
 // start the Stimulus application
 // import './bootstrap';

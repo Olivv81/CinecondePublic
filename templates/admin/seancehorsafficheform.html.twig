@@ -1,0 +1,23 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% form_theme formHoraire _self %}
+
+{% block body %}
+	<div class='undernav'>
+		<h2>Edition de la séance hors affiche</h2>
+	</div>
+	<section>
+		<div class='form'>
+			{{form_start(formHoraire)}}
+			{{form_rest(formHoraire)}}
+			<button type="submit" class="btn">
+				{% if editMode %}
+					Enregistrer !
+				{% else %}
+					Créer !
+				{% endif %}
+			</button>
+			{{form_end(formHoraire)}}
+		</div>
+	</section>
+{% endblock %}

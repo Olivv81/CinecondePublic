@@ -1,0 +1,26 @@
+{% extends 'basebenevole.html.twig' %}
+
+{% form_theme formAdmin _self %}
+
+
+{% block body %}
+	<div
+		class='undernav'>
+		{# <input type="button" class="btn" value="Retour!" onclick="history.back()"> #}
+
+		<h2>Contrôleur</h2>
+
+	</div>
+
+	<div class='form'>
+		<h3>Verrouillage des plannings :</h3>
+		{{form_start(formAdmin)}}
+		{{form_rest(formAdmin)}}
+
+		<button type="submit" class="btn">
+			Valider
+		</button>
+		{{form_end(formAdmin)}}
+	</div>
+
+{% endblock %}

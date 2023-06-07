@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content="Espace bénévoles">
+		<meta name="author" content="Olivier CAILLAUD GAFSI">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		{% block meta %}
+			<meta property="og:title" content="CineCondé"/>
+			<meta property="og:type" content="website"/>
+			<meta property="og:image" content="{{ absolute_url(asset('images/logocineconde.png')) }}"/>
+			<meta property="og:url" content="https://www.cineconde.fr"/>
+		{% endblock %}
+		<link rel="shortcut icon" type="image/png" href="{{ absolute_url(asset('images/favicon.png')) }}"/>
+		<title>
+			{% block title %}
+				CinéCondé - Le Royal
+			{% endblock %}
+		</title>
+		{# <link rel="stylesheet" href="..\styles\styles.css"> #}
+		{% block stylesheets %}
+
+			{{ encore_entry_link_tags('beneApp') }}
+
+
+		{% endblock %}
+		{% block javascripts %}
+
+
+			{{ encore_entry_script_tags('beneApp') }}
+
+		{% endblock %}
+	</head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+	<header>
+		<img src="{{ absolute_url(asset('images/favicon.png')) }}" alt="Logo!" class="logo"/>
+		<h1>
+			Espace Bénévoles
+		</h1>
+	</header>
+	{% if is_granted('ROLE_ADMIN') %}
+		<img src="{{ absolute_url(asset('images/iconbene/category_icon_184313.png')) }}" alt="menu" class="menu iconOpen"/>
+		<nav id="menuAdmin">
+			<img src="{{ absolute_url(asset('images/iconbene/close_square_icon_184289.png')) }}" alt="menu" class="menu iconClose"/>
+			<a href="{{path('planningform',{'team': "accueil"})}}" class='onglet'>Planning accueil</a>
+			<a href="{{path('planningform',{'team': "projection"})}}" class='onglet'>Planning projection</a>
+			<a href="{{path('seancehorsaffiche')}}" class='onglet'>Séances hors programmation</a>
+			<a href="{{path('benevoles')}}" class='onglet'>Gérer les bénevoles</a>
+			<a href="{{path('controleur')}}" class='onglet'>Gérer les paramètres du site</a>
+			<a href="{{path('relance')}}" class='onglet'>Envoyer un mail de relance</a>
+		</nav>
+	{% endif %}
+
+	<div class="underHeader">
+		<nav class="navMenu">
+			<a href="{{path('home')}}" id="home">Accueil</a>
+			<a href="{{path('planning')}}" id="planning">Planning</a>
+			<a href="{{path('profil')}}" id="profil">Profil</a>
+			{# <a href="{{app.request.headers.get('referer')}}" class="icon"><img src="{{ absolute_url(asset('images/revenir.png')) }}" alt="Icone revenir"/></a> #}
+			<a href="{{path('app_logout')}}">Déconnexion</a>
+		</nav>
+	</div>
+
+	<body>
+		{% block body %}{% endblock %}
+	</body>
+
+	<nav class="navMenuResponsive">
+		<a href="{{path('home')}}"><img src="{{ absolute_url(asset('images/iconbene/home_icon_184326.png')) }}" alt="home" class="iconNav"/></a>
+		<a href="{{path('planning')}}"><img src="{{ absolute_url(asset('images/iconbene/calendar_icon_184243.png')) }}" alt="planning" class="iconNav"/></a>
+		<a href="{{path('profil')}}"><img src="{{ absolute_url(asset('images/iconbene/profile_icon_184246.png')) }}" alt="profil" class="iconNav"/></a>
+		{# <a href="{{app.request.headers.get('referer')}}" class="icon"><img src="{{ absolute_url(asset('images/revenir.png')) }}" alt="Icone revenir"/></a> #}
+		<a href="{{path('app_logout')}}"><img src="{{ absolute_url(asset('images/iconbene/logout_icon_184325(1).png')) }}" alt="logout" class="iconNav"/></a>
+	</nav>
+
+	<script>
+		$(document).ready(function () {
+var tab = $("section").attr("tab");
+$('#' + tab).addClass("active");
+
+$(".iconClose").click(function () {
+$("#menuAdmin").css("transform", "translate(100%)")
+})
+
+$(".iconOpen").click(function () {
+$("#menuAdmin").css("transform", "translate(0%)")
+})
+
+
+})
+	</script>
+</html></html></html>

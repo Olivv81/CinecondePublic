@@ -1,0 +1,93 @@
+{% apply inky_to_html |inline_css(source('@styles/foundation-emails.css')) %}
+
+<style>
+	.columns {
+		border: 1px solid #333;
+	}
+	.wrapper {
+		color: white;
+	}
+</style>
+
+<container>
+	<row>
+		<p>{{message|nl2br}}</p>
+	</row>
+	<button href="{{absolute_url('https://www.cineconde.fr/login')}}" class="secondary">Se connecter</button>
+
+	<wrapper class="header" bgcolor="#3A3A3A">
+		<h3 class="text-center">Planning</h3>
+
+		<row>
+			<columns>
+				<h3 class="text-center">Séance</h3>
+			</columns>
+			{% if accueil %}
+				<columns>
+					<h3 class="text-center">Accueil</h3>
+				</columns>
+			{% endif %}
+			{% if projection %}
+				<columns>
+					<h3 class="text-center">Projection</h3>
+				</columns>
+			{% endif %}
+		</row>
+	</wrapper>
+
+
+	{% for horaire in horaires %}
+		{% if ((((accueil) and (horaire in horairesAccueil)) or ((projection) and (horaire in horairesProjection))) and (toutesLesSeances == false)) or (toutesLesSeances == true ) %}
+
+
+			<row>
+				<columns>
+					<strong>{{horaire.horaire|format_datetime('full', 'none', locale='fr')}}
+						<br>
+						{{horaire.horaire|format_datetime('none', 'short', locale='fr')}}</strong>
+					<br>
+					{% if horaire.aLAffiche == true %}
+						<a href="{{absolute_url('https://www.cineconde.fr/fdetail/' ~ horaire.Film.id)}}" target="_blank">{{horaire.Film.titre}}</a>
+					{% else %}
+						{{horaire.typeSeance}}
+					{% endif %}
+
+				</columns>
+				{% if accueil %}
+
+					{% if horaire.accueil|length < 2  %}
+						<columns bgcolor="#f44336">
+						{% else %}
+							<columns>
+							{% endif %}
+
+							{% for user in horaire.accueil %}
+								<row>{{user.prenom}}
+									{{user.nom}}
+								</row>
+							{% endfor %}
+						</columns>
+					{% endif %}
+
+
+					{% if projection %}
+						{% if horaire.projection|length < 1  %}
+							<columns bgcolor="#f44336">
+							{% else %}
+								<columns>
+								{% endif %}
+
+								{% for user in horaire.projection %}
+									<row>{{user.prenom}}
+										{{user.nom}}
+									</row>
+								{% endfor %}
+							</columns>
+						{% endif %}
+
+					</row>
+				{% endif %}
+			{% endfor %}
+
+		</container>
+		{% endapply %}

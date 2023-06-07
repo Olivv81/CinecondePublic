@@ -1,0 +1,30 @@
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+{% block stylesheets %}
+
+	{{ encore_entry_link_tags('beneApp') }}
+
+
+{% endblock %}
+{% block javascripts %}
+
+
+	{{ encore_entry_script_tags('beneApp') }}
+
+{% endblock %}
+{% block body %}
+	<section>
+
+		<article>
+			<h1>Mail Envoyé !</h1>
+			<p>
+				Si l'adresse mail correspond bien à un compte, alors un email vient de vous être envoyé contenant une invitation pour vous connecter et recréer votre mot de passe. Cette invitation est valable
+				{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+			</p>
+			<p>Si vous n'avez pas reçu le mail, vérifier votre dossier spams ou bien
+				<a href="{{ path('app_forgot_password_request') }}">ré-essayer</a>.</p>
+		</article>
+	</section>
+{% endblock %}
