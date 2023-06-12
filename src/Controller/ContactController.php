@@ -25,9 +25,9 @@ class ContactController extends AbstractController
             if (empty($contactFormData['age']) && (strpos($contactFormData['message'], "http") == false) && (strpos($contactFormData['message'], "@Crypt") == false)) {
 
                 $message = (new Email())
-                    ->from('***REMOVED***')
-                    ->to('***REMOVED***')
-                    // ->setCc('***REMOVED***')
+                    ->from('communication@cineconde.fr')
+                    ->to('com.leroyalconde@gmx.fr')
+                    // ->setCc('herve.cinema14@yahoo.fr')
                     ->subject('Message venant du site !')
                     ->html(nl2br($contactFormData['message'] . '<br><br>' . $contactFormData['nom'] . '<br>' . $contactFormData['email']));
 

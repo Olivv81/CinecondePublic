@@ -9,7 +9,6 @@ use App\Form\MovieType;
 use App\Form\SeanceType;
 use App\Entity\Documents;
 use App\Entity\Evenement;
-use App\Controller\Allocine;
 use App\Form\MovieWithoutPictureType;
 use SebastianBergmann\Timer\Duration;
 use Doctrine\Persistence\ManagerRegistry;
@@ -44,7 +43,7 @@ class ProgController extends AbstractController
      */
 
 
-    public function essai(ManagerRegistry $doctrine): Response
+    public function import(ManagerRegistry $doctrine): Response
     {
 
         $entityManager = $doctrine->getManager();
@@ -54,7 +53,7 @@ class ProgController extends AbstractController
 
         function findTrailerInTMDB($titre, $year)
         {
-            $keyTMDB = "***REMOVED***";
+            $keyTMDB = \file_get_contents("../TMDBKey.txt");
             $url = 'https://api.themoviedb.org/3/search/movie?api_key=' . $keyTMDB . '&query=' . $titre . '&year=' . $year . '&language=fr-FR&page=1&include_adult=false';
 
             $encodedUrl = str_replace(" ", "%20", $url);
@@ -78,14 +77,8 @@ class ProgController extends AbstractController
 
             return $trailerTMDB['results'][0]['key'];
         }
-        // $titre = 'Don Juan';
-        // // $titreMo = \str_replace(" ", "+", $titre);
-        // findTrailerInTMDB($titre, "2022-05-23");
 
-        // require_once(__DIR__ . '/Allocine.php');
 
-        // define('ALLOCINE_PARTNER_KEY', '100ED1DA33EB');
-        // define('ALLOCINE_SECRET_KEY', '1a1ed8c1bed24d60ae3472eed1da33eb');
 
 
         function classification($codeAPI)
@@ -105,7 +98,8 @@ class ProgController extends AbstractController
         };
 
         // https://movies.monnaie-services.com/doc/fr/prog_api
-        $response = file_get_contents('***REMOVED***');
+        $urlApiMs = file_get_contents("../APIMonnaieServices.txt");
+        $response = file_get_contents($urlApiMs);
         $response = json_decode($response);
         // visualisation du contenu de l'API :
         // dd(date('D d-m-Y H:i:s', $response->version), $response);
@@ -114,13 +108,8 @@ class ProgController extends AbstractController
 
 
         foreach ($lesfilms as $filmAPI) {
-
-
             $filmexistant = $repofilm->findOneBy(['idFilm' => $filmAPI->id]);
-
-
             // echo ($filmexistant . '<br/>');
-
             if (empty($filmexistant)) {
                 // si le film en'existe pas, le créer :             
                 $film = new Film();

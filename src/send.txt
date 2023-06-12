@@ -23,8 +23,8 @@ function Send(MailerInterface $mailer)
 {
 
     $email = (new Email())
-        ->from('***REMOVED***')
-        ->to('***REMOVED***')
+        ->from('communication@cineconde.fr')
+        ->to('olivier.caillaud_gafsi@gmx.fr')
         ->subject('newsletter');
 
     // path of the Twig template to render

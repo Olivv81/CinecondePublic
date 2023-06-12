@@ -24,9 +24,9 @@ class ContactController extends AbstractController
             $contactFormData = $form->getData();
             if (empty($contactFormData['age'])) {
                 $message = (new \Swift_Message('message du site'))
-                    ->setFrom('***REMOVED***')
-                    ->setTo('***REMOVED***')
-                    ->setCc('***REMOVED***')
+                    ->setFrom('com.leroyalconde@gmx.fr')
+                    ->setTo('com.leroyalconde@gmx.fr')
+                    ->setCc('herve.cinema14@yahoo.fr')
                     ->setBody($contactFormData['message'] . '<br>' . $contactFormData['nom'] . '<br>' . $contactFormData['email'], 'text/html');
 
 

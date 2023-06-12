@@ -60,7 +60,7 @@ class SendCommand extends Command
             $IDNewsletter = $newsLetter->getId();
             $contacts = $doctrine->getRepository(NewsLetter::class)->Destinataires($IDNewsletter);
             $email = (new TemplatedEmail())
-                ->from('***REMOVED***')
+                ->from('communication@cineconde.fr')
                 ->to($contacts)
                 ->subject('newsletter')
 
@@ -84,8 +84,8 @@ class SendCommand extends Command
 
 
         // $email = (new Email())
-        //     ->from('***REMOVED***')
-        //     ->to('***REMOVED***')
+        //     ->from('com.leroyalconde@gmx.fr')
+        //     ->to('olivier.caillaud_gafsi@gmx.fr')
         //     ->subject('newsletter')
         //     ->text('Sending emails is fun again!');
 

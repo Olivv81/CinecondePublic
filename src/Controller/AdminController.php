@@ -114,7 +114,7 @@ class AdminController extends AbstractController
         //             ->setEmail($benevole->email)
         //             ->setNom($benevole->nom)
         //             ->setPrenom($benevole->prenom);
-        //         $user->setPassword("***REMOVED***");
+        //         $user->setPassword("Motdepassedefaut30112022");
         //         $hash = $passwordHasher->hashPassword($user, $user->getPassword());
         //         $user->setPassword($hash);
         //         $manager->persist($user);
@@ -143,7 +143,7 @@ class AdminController extends AbstractController
         // dd($repo);
         if (!$user) {
             $user = new user();
-            $user->setPassword("***REMOVED***");
+            $user->setPassword("Motdepassedefaut30112022");
             $hash = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hash);
         }
@@ -297,7 +297,7 @@ class AdminController extends AbstractController
             $expediteur = $user->getEmail();
 
             $email = (new TemplatedEmail())
-                ->from('***REMOVED***')
+                ->from('communication@cineconde.fr')
                 ->to(...$destinataires)
                 // ->addto((...$destinataires))
                 ->subject($relanceFormData['objet'])

@@ -68,8 +68,8 @@ class NewsLetterController extends AbstractController
 
             $NewsLetterFormData = $form->getData();
             $email = (new TemplatedEmail())
-                ->from('***REMOVED***')
-                ->to('***REMOVED***')
+                ->from('communication@cineconde.fr')
+                ->to('olivier.caillaud_gafsi@gmx.fr')
                 ->subject('newsletter')
 
                 // path of the Twig template to render
